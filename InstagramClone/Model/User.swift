@@ -1,0 +1,41 @@
+//
+//  User.swift
+//  InstagramClone
+//
+//  Created by Maxym Horobets on 17.04.2026.
+//
+
+import Foundation
+import FirebaseAuth
+
+struct User: Identifiable, Codable, Hashable {
+    let id: String
+    var username: String
+    var profileImageUrl: String?
+    var fullname: String?
+    var bio: String?
+    let email: String
+    
+    var isFollowed: Bool? = false
+    var stats: UserStats?
+    
+    var isCurrentUser: Bool {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return false}
+        return currentUid == id
+    }
+}
+
+struct UserStats: Codable, Hashable {
+    var followersCount: Int
+    var followingCount: Int
+    var postsCount: Int
+}
+
+extension User {
+    static var MOCK_USERS: [User] = [
+        .init(id: NSUUID().uuidString, username: "batman", profileImageUrl: nil, fullname: "Bruce Wayne", bio: "Gotham's Dark Knight", email: "batman@gmail.com"),
+        .init(id: NSUUID().uuidString, username: "venom", profileImageUrl: nil, fullname: "Edie Brock", bio: "Venom", email: "venom@gmail.com"),
+        .init(id: NSUUID().uuidString, username: "batman", profileImageUrl: nil, fullname: "Bruce Wayne", bio: "Gotham's Dark Knight", email: "batman@gmail.com"),
+        .init(id: NSUUID().uuidString, username: "spiderman", profileImageUrl: nil, fullname: "Peter Parker", bio: "Test bio", email: "spiderman@gmail.com"),
+    ]
+}

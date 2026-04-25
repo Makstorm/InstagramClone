@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0F749D652F93C91300106DD8 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0F749D642F93C91300106DD8 /* FirebaseAuth */; };
+		0F749D672F93C91300106DD8 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 0F749D662F93C91300106DD8 /* FirebaseFirestore */; };
+		0F749D692F93C91300106DD8 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0F749D682F93C91300106DD8 /* FirebaseStorage */; };
+		0F749E542F967C7200106DD8 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 0F749E532F967C7200106DD8 /* Kingfisher */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		0F749C3E2F8FF27700106DD8 /* InstagramClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstagramClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +30,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F749E542F967C7200106DD8 /* Kingfisher in Frameworks */,
+				0F749D652F93C91300106DD8 /* FirebaseAuth in Frameworks */,
+				0F749D672F93C91300106DD8 /* FirebaseFirestore in Frameworks */,
+				0F749D692F93C91300106DD8 /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +76,10 @@
 			);
 			name = InstagramClone;
 			packageProductDependencies = (
+				0F749D642F93C91300106DD8 /* FirebaseAuth */,
+				0F749D662F93C91300106DD8 /* FirebaseFirestore */,
+				0F749D682F93C91300106DD8 /* FirebaseStorage */,
+				0F749E532F967C7200106DD8 /* Kingfisher */,
 			);
 			productName = InstagramClone;
 			productReference = 0F749C3E2F8FF27700106DD8 /* InstagramClone.app */;
@@ -94,6 +109,10 @@
 			);
 			mainGroup = 0F749C352F8FF27700106DD8;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0F749D632F93C91300106DD8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				0F749E522F967C7200106DD8 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0F749C3F2F8FF27700106DD8 /* Products */;
 			projectDirPath = "";
@@ -332,6 +351,48 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0F749D632F93C91300106DD8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.12.1;
+			};
+		};
+		0F749E522F967C7200106DD8 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.8.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0F749D642F93C91300106DD8 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0F749D632F93C91300106DD8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		0F749D662F93C91300106DD8 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0F749D632F93C91300106DD8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		0F749D682F93C91300106DD8 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0F749D632F93C91300106DD8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		0F749E532F967C7200106DD8 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0F749E522F967C7200106DD8 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0F749C362F8FF27700106DD8 /* Project object */;
 }
