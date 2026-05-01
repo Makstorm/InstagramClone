@@ -5,63 +5,68 @@
 //  Created by Maxym Horobets on 18.04.2026.
 //
 
-import Foundation
 import FirebaseAuth
-import Combine
 import FirebaseFirestore
 
-class AuthService {
+protocol AuthServiceProtocol {
+    func createUser(withEmail email: String, password: String, username: String) async throws -> String
+    func deleteAccount() async throws
+    func getUserSession() -> String?
+    func login(withEmail email: String, password: String) async throws -> String
+    func sendRessetPasswordLink(toEmail email: String) async throws
+    func signout()
+}
+
+struct AuthService: AuthServiceProtocol {
     
-    @Published var userSession: FirebaseAuth.User?
     
-    static let shared = AuthService()
-    
-    init() {
-        self.userSession = Auth.auth().currentUser
-        
-        Task { try await loadUserData() }
+    func createUser(withEmail email: String, password: String, username: String)
+        async throws -> String
+    {
+        do {
+            let result = try await Auth.auth().createUser(
+                withEmail: email,
+                password: password
+            )
+            await uploadUserData(uid: result.user.uid, username: username, email: email)
+            return result.user.uid
+        } catch {
+            let nsError = error as NSError
+            guard let authErrorCode = AuthErrorCode(rawValue: nsError.code) else { throw error }
+            throw AuthenticationError(rawValue: authErrorCode.rawValue)
+        }
     }
     
-    @MainActor
-    func login(withEmail email: String, password: String) async throws {
+    func deleteAccount() async throws {
+    }
+
+    func getUserSession() -> String? {
+        return Auth.auth().currentUser?.uid
+    }
+    
+    func login(withEmail email: String, password: String) async throws -> String
+    {
         do {
             let result = try await Auth.auth().signIn(withEmail: email, password: password)
-            self.userSession = result.user
-            try await self.loadUserData()
+            return result.user.uid
         } catch {
-            print("DEBUG: Failed to log in with error \(error.localizedDescription)")
+            let nsError = error as NSError
+            guard let authErrorCode = AuthErrorCode(rawValue: nsError.code) else { throw error }
+            throw AuthenticationError(rawValue: authErrorCode.rawValue)
         }
     }
     
-    @MainActor
-    func createUser(email: String, password: String, username: String) async throws {
-        do {
-            let result = try await Auth.auth().createUser(withEmail: email, password: password)
-            self.userSession = result.user
-            await self.uploadUserData(uid: result.user.uid, username: username, email: email)
-        } catch {
-            print("DEBUG: failed to register error \(error.localizedDescription)")
-        }
+    func sendRessetPasswordLink(toEmail email: String) async throws {
+        
     }
-    
-    @MainActor
-    func loadUserData() async throws {
-        guard let currentUid = userSession?.uid else { return }
-        try await UserService.shared.fetchCurrentUser()
-    }
-    
+
     func signout() {
         try? Auth.auth().signOut()
-        self.userSession = nil
-        UserService.shared.currentUser = nil
     }
-    
+
     private func uploadUserData(uid: String, username: String, email: String) async {
         let user = User(id: uid, username: username, email: email)
-        UserService.shared.currentUser = user
         guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
-        
         try? await Firestore.firestore().collection("users").document(user.id).setData(encodedUser)
-        
     }
 }

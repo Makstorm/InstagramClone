@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct MainTabView: View {
-    let user: User
-    
     var body: some View {
         CustomTabBarContainer(tabs: [
             TabItem(icon: "house.fill") {
@@ -25,13 +23,13 @@ struct MainTabView: View {
                 NotificationView()
             },
             TabItem(icon: "person") {
-                CurrentUserProfileView(user: user)
+                CurrentUserProfileView()
             }
         ])
     }
 }
 
 #Preview {
-    MainTabView(user: User.MOCK_USERS[0])
+    MainTabView()
 }
 

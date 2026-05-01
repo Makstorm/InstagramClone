@@ -13,19 +13,64 @@
 		0F749E542F967C7200106DD8 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 0F749E532F967C7200106DD8 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		0F7040332FA2500E0019CD50 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0F749C362F8FF27700106DD8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0F749C3D2F8FF27700106DD8;
+			remoteInfo = InstagramClone;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		0F70402F2FA2500E0019CD50 /* InstagramCloneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InstagramCloneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F749C3E2F8FF27700106DD8 /* InstagramClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstagramClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0F70403C2FA2507D0019CD50 /* Exceptions for "InstagramClone" folder in "InstagramCloneTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Core/Authentication/Tests/AuthenticationRouterTests.swift,
+				Core/Authentication/Tests/AuthManagerTests.swift,
+				Core/Authentication/Tests/LoginViewModelTests.swift,
+				Core/Authentication/Tests/RegistrationViewModelTests.swift,
+			);
+			target = 0F70402E2FA2500E0019CD50 /* InstagramCloneTests */;
+		};
+		0F70403D2FA251340019CD50 /* Exceptions for "InstagramClone" folder in "InstagramClone" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Core/Authentication/Tests/AuthenticationRouterTests.swift,
+				Core/Authentication/Tests/AuthManagerTests.swift,
+				Core/Authentication/Tests/LoginViewModelTests.swift,
+				Core/Authentication/Tests/RegistrationViewModelTests.swift,
+			);
+			target = 0F749C3D2F8FF27700106DD8 /* InstagramClone */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0F749C402F8FF27700106DD8 /* InstagramClone */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0F70403D2FA251340019CD50 /* Exceptions for "InstagramClone" folder in "InstagramClone" target */,
+				0F70403C2FA2507D0019CD50 /* Exceptions for "InstagramClone" folder in "InstagramCloneTests" target */,
+			);
 			path = InstagramClone;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0F70402C2FA2500E0019CD50 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0F749C3B2F8FF27700106DD8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -52,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				0F749C3E2F8FF27700106DD8 /* InstagramClone.app */,
+				0F70402F2FA2500E0019CD50 /* InstagramCloneTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -59,6 +105,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0F70402E2FA2500E0019CD50 /* InstagramCloneTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0F7040352FA2500E0019CD50 /* Build configuration list for PBXNativeTarget "InstagramCloneTests" */;
+			buildPhases = (
+				0F70402B2FA2500E0019CD50 /* Sources */,
+				0F70402C2FA2500E0019CD50 /* Frameworks */,
+				0F70402D2FA2500E0019CD50 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0F7040342FA2500E0019CD50 /* PBXTargetDependency */,
+			);
+			name = InstagramCloneTests;
+			packageProductDependencies = (
+			);
+			productName = InstagramCloneTests;
+			productReference = 0F70402F2FA2500E0019CD50 /* InstagramCloneTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		0F749C3D2F8FF27700106DD8 /* InstagramClone */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0F749C492F8FF27800106DD8 /* Build configuration list for PBXNativeTarget "InstagramClone" */;
@@ -95,6 +161,11 @@
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
+					0F70402E2FA2500E0019CD50 = {
+						CreatedOnToolsVersion = 26.2;
+						LastSwiftMigration = 2620;
+						TestTargetID = 0F749C3D2F8FF27700106DD8;
+					};
 					0F749C3D2F8FF27700106DD8 = {
 						CreatedOnToolsVersion = 26.2;
 					};
@@ -119,11 +190,19 @@
 			projectRoot = "";
 			targets = (
 				0F749C3D2F8FF27700106DD8 /* InstagramClone */,
+				0F70402E2FA2500E0019CD50 /* InstagramCloneTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0F70402D2FA2500E0019CD50 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0F749C3C2F8FF27700106DD8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -134,6 +213,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0F70402B2FA2500E0019CD50 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0F749C3A2F8FF27700106DD8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -143,7 +229,60 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		0F7040342FA2500E0019CD50 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0F749C3D2F8FF27700106DD8 /* InstagramClone */;
+			targetProxy = 0F7040332FA2500E0019CD50 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		0F7040362FA2500E0019CD50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6TGUK44Q7A;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pt4shk4.InstagramCloneTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/InstagramClone.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/InstagramClone";
+			};
+			name = Debug;
+		};
+		0F7040372FA2500E0019CD50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6TGUK44Q7A;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pt4shk4.InstagramCloneTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/InstagramClone.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/InstagramClone";
+			};
+			name = Release;
+		};
 		0F749C472F8FF27800106DD8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -332,6 +471,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0F7040352FA2500E0019CD50 /* Build configuration list for PBXNativeTarget "InstagramCloneTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0F7040362FA2500E0019CD50 /* Debug */,
+				0F7040372FA2500E0019CD50 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		0F749C392F8FF27700106DD8 /* Build configuration list for PBXProject "InstagramClone" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

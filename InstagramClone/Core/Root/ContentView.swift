@@ -8,17 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var viewModel = ContentViewModel()
-    @StateObject var registrationViewModel = RegistrationViewModel()
+    @EnvironmentObject private var authManager: AuthManager
+    @EnvironmentObject private var userManager: UserManager
+
+    @StateObject var registrationViewModel = RegistrationViewModel(service: RegistrationValidationService())
+
     
     var body: some View {
         Group {
-            if viewModel.userSession == nil {
+            if authManager.userSession == nil {
                 LoginView()
                     .environmentObject(registrationViewModel)
-            } else if let currentUser = viewModel.currentUser {
-                MainTabView(user: currentUser)
+            } else if userManager.currentUser != nil {
+                MainTabView()
             }
+        }
+        .task(id: authManager.userSession) {
+            guard authManager.userSession != nil else { return }
+            await userManager.fetchCurrentUser()
         }
     }
 }
