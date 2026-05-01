@@ -10,6 +10,8 @@ import SwiftUI
 struct CreateUsernameView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: RegistrationViewModel
+    @EnvironmentObject var router: AuthenticationRouter
+    @EnvironmentObject var authManager: AuthManager
     
     var body: some View {
         VStack(spacing: 12) {
@@ -18,32 +20,24 @@ struct CreateUsernameView: View {
                 .fontWeight(.bold)
                 .padding(.top)
             
-            Text("You'll use this email to sign in to your account")
+            Text("Your account handle. You can always change this later.")
                 .font(.footnote)
                 .foregroundStyle(.gray)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
             
-            TextField("Username", text: $viewModel.username)
+            IGInpuntField("Username", text: $viewModel.username, error: $viewModel.validationError, isLoading: viewModel.isValidating)
                 .textInputAutocapitalization(.never)
-                .modifier(IGTextFieldModifier())
-                
             
-            NavigationLink {
-                CreatePasswordView()
-                    .navigationBarBackButtonHidden()
-            } label: {
-                Text("Next")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .frame(width: 360, height: 44)
-                    .background(Color(.systemBlue))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-            }
-            .padding(.vertical)
+            IGButton("Next", action: onNext)
+                .disabled(!formIsValid || viewModel.isValidating)
+                .opacity(formIsValid ? 1.0 : 0.5)
+                .padding(.vertical)
                     
             Spacer()
+        }
+        .onAppear {
+            viewModel.validationError = nil
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -52,6 +46,24 @@ struct CreateUsernameView: View {
                     .onTapGesture {
                         dismiss()
                     }
+            }
+        }
+    }
+}
+
+private extension CreateUsernameView {
+    var formIsValid: Bool {
+        return viewModel.username.isValidUsername()
+    }
+    
+    func onNext() {
+        Task {
+            let usernameIsValid = await viewModel.validateUsername()
+            
+            if usernameIsValid {
+                router.navigate()
+            } else {
+                print("Debug: error validating username")
             }
         }
     }

@@ -10,17 +10,18 @@ import FirebaseAuth
 import FirebaseFirestore
 import Foundation
 
-class UserService {
-    @Published var currentUser: User?
+protocol UserServiceProtocol {
+    func fetchCurrentUser() async throws -> User?
+}
 
-    static let shared = UserService()
-
-    @MainActor
-    func fetchCurrentUser() async throws {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        self.currentUser = try await FirebaseConstants.UserCollection.document(
-            uid
-        ).getDocument(as: User.self)
+class UserService: UserServiceProtocol {
+    func fetchCurrentUser() async throws -> User? {
+        guard let uid = Auth.auth().currentUser?.uid else { return nil }
+        
+        return try await FirebaseConstants
+            .UserCollection
+            .document(uid)
+            .getDocument(as: User.self)
     }
 
     static func fetchUser(withUid uId: String) async throws -> User {

@@ -18,7 +18,7 @@ class NotificationsViewModel: ObservableObject {
     init(service: NotificationService) {
         self.service = service
         Task { await fetchNotifications() }
-        self.currentUser = UserService.shared.currentUser
+        self.currentUser = nil
     }
     
     func fetchNotifications() async  {
