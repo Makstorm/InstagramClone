@@ -38,9 +38,17 @@ class UploadPhotoViewModel: ObservableObject {
         
         let postRef = FirebaseConstants.PostsCollection.document()
         guard let imageUrl = try await ImageUploader.uploadImage(image: uiImage) else { return }
-        let post = Post(id: postRef.documentID, ownerUid: uid, caption: caption, likes: 0, imageUrl: imageUrl, timestamb: Timestamp())
-        guard let encodedPost = try? Firestore.Encoder().encode(post) else { return }
         
+        let post = Post(
+            id: postRef.documentID,
+            ownerUid: uid,
+            caption: caption,
+            likes: 0,
+            imageUrl: imageUrl,
+            timestamb: Date()
+        )
+        
+        let encodedPost = try Firestore.Encoder().encode(post)
         try await postRef.setData(encodedPost)
     }
 }

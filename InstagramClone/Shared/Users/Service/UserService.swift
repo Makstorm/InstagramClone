@@ -12,6 +12,7 @@ import Foundation
 
 protocol UserServiceProtocol {
     func fetchCurrentUser() async throws -> User?
+    func fetchUser(withUid uId: String) async throws -> User
 }
 
 class UserService: UserServiceProtocol {
@@ -23,8 +24,8 @@ class UserService: UserServiceProtocol {
             .document(uid)
             .getDocument(as: User.self)
     }
-
-    static func fetchUser(withUid uId: String) async throws -> User {
+    
+    func fetchUser(withUid uId: String) async throws -> User {
         let snapshot = try await FirebaseConstants.UserCollection.document(uId)
             .getDocument()
         return try snapshot.data(as: User.self)
@@ -71,12 +72,13 @@ class UserService: UserServiceProtocol {
     private static func fetchUsers(_ snapshot: QuerySnapshot) async throws
         -> [User]
     {
-        var users = [User]()
-        for doc in snapshot.documents {
-            let uid = doc.documentID
-            users.append(try await fetchUser(withUid: uid))
-        }
-        return users
+//        var users = [User]()
+//        for doc in snapshot.documents {
+//            let uid = doc.documentID
+//            users.append(try await fetchUser(withUid: uid))
+//        }
+//        return users
+        return []
     }
 }
 

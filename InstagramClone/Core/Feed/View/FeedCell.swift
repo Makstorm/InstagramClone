@@ -130,5 +130,5 @@ struct FeedCell: View {
 }
 
 #Preview {
-    FeedCell(post: Post.MOCK_POSTS[0])
+    FeedCell(post: MockData.posts[0])
 }

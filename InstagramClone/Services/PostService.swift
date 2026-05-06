@@ -13,6 +13,7 @@ import Foundation
 struct PostService {
 
     private static let postsCollection = FirebaseConstants.PostsCollection
+    private static let userService = UserService()
 
     // used in feed page to load posts
     static func fetchFeedPosts() async throws -> [Post] {
@@ -37,7 +38,7 @@ struct PostService {
         try await withThrowingTaskGroup(of: (Int, User).self) { group in
             for (index, post) in loadedPosts.enumerated() {
                 group.addTask {
-                    let user = try await UserService.fetchUser(
+                    let user = try await userService.fetchUser(
                         withUid: post.ownerUid
                     )
                     return (index, user)

@@ -11,7 +11,7 @@ import Firebase
 struct Notification: Codable, Identifiable {
     let id: String
     var postId: String?
-    let timestamp: Timestamp
+    let timestamp: Date
     let notificationSenderUid: String
     let type: NotificationType
     

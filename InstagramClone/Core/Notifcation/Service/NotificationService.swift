@@ -37,7 +37,7 @@ class NotificationService {
         let notification = Notification(
             id: ref.documentID,
             postId: post?.id,
-            timestamp: Timestamp(),
+            timestamp: Date(),
             notificationSenderUid: currentUid,
             type: type
         )

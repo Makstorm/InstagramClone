@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct CommentsView: View {
+    @EnvironmentObject private var userManager: UserManager
     @State private var commnentText = ""
     @StateObject var viewModel: CommentsViewModel
     
-    private var currentUser: User? {
-        return nil
-    }
-    
     init(post: Post) {
-        self._viewModel = StateObject(wrappedValue: CommentsViewModel(post: post))
+        self._viewModel = StateObject(
+            wrappedValue: CommentsViewModel(
+                post: post,
+                commentService: CommentService(postId: post.id),
+                userService: UserService(),
+            )
+        )
     }
     
     var body: some View {
@@ -29,18 +32,32 @@ struct CommentsView: View {
             Divider()
             
             ScrollView {
-                LazyVStack(spacing: 24) {
-                    ForEach(viewModel.comments) { commnet in
-                        CommentsCell(commnet: commnet)
+                switch viewModel.loadingState {
+                case .empty:
+                    EmptyStateView(
+                        "No comments yet",
+                        systemImage: "bubble.circle",
+                        description: "Be the first to comment and add yours below!"
+                    )
+                    .frame(height: 400)
+                    .containerRelativeFrame([.horizontal, .vertical])
+                case .error:
+                    Text("An error occurred")
+                case .loading:
+                    ProgressView()
+                case .complete:
+                    LazyVStack(spacing: 24) {
+                        ForEach(viewModel.comments) { commnet in
+                            CommentsCell(commnet: commnet)
+                        }
                     }
                 }
             }
-            .padding(.top)
             
             Divider()
             
             HStack(spacing: 12) {
-                CircularProfileImageView(user: currentUser, size: .xSmall)
+                CircularProfileImageView(user: userManager.currentUser, size: .xSmall)
                 
                 ZStack(alignment: .trailing) {
                     TextField("Add a commnet...", text: $commnentText)
@@ -53,10 +70,7 @@ struct CommentsView: View {
                         }
                     
                     Button {
-                        Task {
-                            try await viewModel.uploadComment(commentText: commnentText)
-                            commnentText = ""
-                        }
+                        uploadComment()
                     } label: {
                         Text("Post")
                             .font(.subheadline)
@@ -68,9 +82,30 @@ struct CommentsView: View {
             }
             .padding(12)
         }
+        .task {
+            await viewModel.fetchComments()
+        }
+    }
+}
+
+private extension CommentsView {
+    func uploadComment() {
+        Task {
+            guard let currentUser = userManager.currentUser else { return }
+            
+            let tempCommentText = commnentText
+            commnentText = ""
+            
+            await viewModel.uploadComment(
+                    commentText: tempCommentText,
+                    currentUser: currentUser
+            )
+            
+            commnentText = ""
+        }
     }
 }
 
 #Preview {
-    CommentsView(post: Post.MOCK_POSTS[0])
+    CommentsView(post: MockData.posts[0])
 }

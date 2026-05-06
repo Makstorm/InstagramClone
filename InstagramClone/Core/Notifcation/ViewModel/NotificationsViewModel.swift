@@ -14,9 +14,11 @@ class NotificationsViewModel: ObservableObject {
    
     private let service: NotificationService
     private var currentUser: User?
+    private let userService: UserServiceProtocol
     
-    init(service: NotificationService) {
+    init(service: NotificationService, userService: UserServiceProtocol) {
         self.service = service
+        self.userService = userService
         Task { await fetchNotifications() }
         self.currentUser = nil
     }
@@ -35,7 +37,7 @@ class NotificationsViewModel: ObservableObject {
         for i in 0 ..< notifications.count {
             var notification = notifications[i]
             
-            notification.user = try await UserService.fetchUser(withUid: notification.notificationSenderUid)
+            notification.user = try await userService.fetchUser(withUid: notification.notificationSenderUid)
             
             if let postId = notification.postId {
                 notification.post = try await PostService.fetchPost(postId)

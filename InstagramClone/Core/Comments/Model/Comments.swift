@@ -6,20 +6,14 @@
 //
 
 import Foundation
-import FirebaseFirestore
 
 struct Comment: Identifiable, Codable {
-    @DocumentID var commentId: String?
+    let id: String 
     let postOwnerUid: String
     let commnetText: String
     let postId: String
-    let timestamp: Timestamp
+    let timestamp: Date
     let commentOwnerUid: String
     
     var user: User? 
-    
-    var id: String {
-        return commentId ?? NSUUID().uuidString
-    }
-    
 }
