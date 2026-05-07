@@ -50,5 +50,20 @@ class UploadPhotoViewModel: ObservableObject {
         
         let encodedPost = try Firestore.Encoder().encode(post)
         try await postRef.setData(encodedPost)
+        try await updateUserFeedsAfterPost(postId: post.id)
+    }
+    
+    private func updateUserFeedsAfterPost(postId: String) async throws {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        // fetch followers of post owner
+        
+        let followersSnapshot = try await FirebaseConstants.FollowersCollection.document(uid).collection("user-followers").getDocuments()
+        
+        for document in followersSnapshot.documents {
+            try await FirebaseConstants.UserFeedCollection(uid: document.documentID).document(postId).setData([:])
+        }
+        
+        try await FirebaseConstants.UserFeedCollection(uid: uid).document(postId).setData([:])
     }
 }

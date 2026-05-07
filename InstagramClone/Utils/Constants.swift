@@ -24,4 +24,12 @@ struct FirebaseConstants {
     static func UserNotificationCollection(uid: String) -> CollectionReference {
         return NotificationsCollection.document(uid).collection("user-notifications")
     }
+    
+    static func UserSavedPostsCollection(uid: String) -> CollectionReference {
+        return UserCollection.document(uid).collection("saved-posts")
+    }
+    
+    static func UserFeedCollection(uid: String) -> CollectionReference {
+        return UserCollection.document(uid).collection("user-feed")
+    }
 }

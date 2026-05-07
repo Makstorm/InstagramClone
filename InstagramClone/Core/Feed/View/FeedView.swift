@@ -8,20 +8,47 @@
 import SwiftUI
 
 struct FeedView: View {
-    @StateObject var viewModel = FeedViewModel()
+    @StateObject var viewModel = FeedViewModel(feedService: FeedService(), userService: UserService())
+    
+    @State private var activeScrollId: String?
+    @State private var paginating = false
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: 32) {
-                    ForEach(viewModel.posts) { post in
-                        FeedCell(post: post)
+            Group {
+                switch viewModel.loadingState {
+                case .empty:
+                    Text("Empty state goes here")
+                case .error:
+                    Text("An error occurred.")
+                case .loading:
+                    ProgressView()
+                case .complete:
+                    ScrollView {
+                        LazyVStack(spacing: 32) {
+                            ForEach(viewModel.posts) { post in
+                                FeedCell(post: post, viewModel: viewModel)
+                            }
+                            
+                            if paginating {
+                                ProgressView()
+                            }
+                        }
+                        .scrollTargetLayout()
+                        .padding(.top, 8)
                     }
+                    .scrollPosition(id: $activeScrollId, anchor: .bottom)
                 }
-                .padding(.top, 8)
             }
+            .onChange(of: activeScrollId, { oldValue, newValue in
+                loadMorePosts(newValue)
+            })
+            .refreshable { await viewModel.refreshPosts() }
             .navigationTitle("Feed")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: FeedRouter.self) { route in
+                route.view
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Image(.instagramLogoBlack)
@@ -31,15 +58,29 @@ struct FeedView: View {
                 .sharedBackgroundVisibility(.hidden)
 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Image(systemName: "paperplane")
+                    NavigationLink(value: FeedRouter.inbox) {
+                        Image(systemName: "paperplane")
+                            .imageScale(.large)
+                    }
                 }
                 .sharedBackgroundVisibility(.hidden)
             }
             .onAppear {
                 Task {
-                    try await viewModel.fetchPosts()
+                     await viewModel.fetchPosts()
                 }
             }
+        }
+    }
+}
+
+private extension FeedView {
+    func loadMorePosts(_ activeScrollId: String?) {
+        Task {
+            guard activeScrollId == viewModel.posts.last?.id else { return }
+            paginating = true
+            await viewModel.fetchPosts()
+            paginating = false
         }
     }
 }

@@ -16,42 +16,6 @@ struct PostService {
     private static let userService = UserService()
 
     // used in feed page to load posts
-    static func fetchFeedPosts() async throws -> [Post] {
-        let snapShot = try await postsCollection.getDocuments()
-        //        self.posts = try snapShot.documents.compactMap({ document in
-        //            let post = try document.data(as: Post.self)
-        //            return post
-        //        })
-        //
-        //        for i in 0..<posts.count {
-        //            let post = posts[i]
-        //
-        //            let ownerUid = post.ownerUid
-        //            let postUser = try await UserService.fetchUser(withUid: ownerUid)
-        //            posts[i].user = postUser
-        //        }
-
-        var loadedPosts = try snapShot.documents.compactMap { document in
-            try document.data(as: Post.self)
-        }
-
-        try await withThrowingTaskGroup(of: (Int, User).self) { group in
-            for (index, post) in loadedPosts.enumerated() {
-                group.addTask {
-                    let user = try await userService.fetchUser(
-                        withUid: post.ownerUid
-                    )
-                    return (index, user)
-                }
-            }
-
-            for try await (index, user) in group {
-                loadedPosts[index].user = user
-            }
-        }
-
-        return loadedPosts
-    }
 
     static func fetchUserPosts(uid: String) async throws -> [Post] {
         let snapshot = try await postsCollection.whereField(

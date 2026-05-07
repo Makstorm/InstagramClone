@@ -26,11 +26,7 @@ struct NotificationView: View {
             .refreshable { Task { await viewModel.fetchNotifications() }
             }
             .navigationDestination(for: Post.self, destination: { post in
-                ScrollView {
-                    VStack {
-                        FeedCell(post: post)
-                    }
-                }
+//                FeedCell(post: post)
             })
             .navigationDestination(for: User.self) { user in
                 ProfileView(user: user)

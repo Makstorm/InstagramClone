@@ -95,6 +95,8 @@ extension UserService {
         async let _ = try await FirebaseConstants.FollowersCollection.document(
             uid
         ).collection("user-followers").document(currentUid).setData([:])
+        
+        try await updateUserFeedAfterFollow(followedUid: uid)
     }
 
     static func unfollow(uid: String) async throws {
@@ -107,6 +109,8 @@ extension UserService {
         async let _ = try await FirebaseConstants.FollowersCollection.document(
             uid
         ).collection("user-followers").document(currentUid).delete()
+        
+        try await updateUserFeedAfterUnfollow(unfollowedUid: uid)
     }
 
     static func checkIfUserIsFollowed(uid: String) async throws -> Bool {
@@ -119,6 +123,36 @@ extension UserService {
         ).collection("user-following").document(uid).getDocument()
 
         return snapshot.exists
+    }
+    
+    static func updateUserFeedAfterFollow(followedUid: String) async throws {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        // get user posts
+        
+        let snapshot = try await FirebaseConstants
+            .PostsCollection
+            .whereField("ownerUid", isEqualTo: followedUid)
+            .getDocuments()
+        
+        for document in snapshot.documents {
+            try await FirebaseConstants.UserFeedCollection(uid: uid).document(document.documentID).setData([:])
+        }
+    }
+    
+    static func updateUserFeedAfterUnfollow(unfollowedUid: String) async throws {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        // get user posts
+        
+        let snapshot = try await FirebaseConstants
+            .PostsCollection
+            .whereField("ownerUid", isEqualTo: unfollowedUid)
+            .getDocuments()
+        
+        for document in snapshot.documents {
+            try await FirebaseConstants.UserFeedCollection(uid: uid).document(document.documentID).delete()
+        }
     }
 }
 

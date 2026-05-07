@@ -16,7 +16,34 @@ struct Post: Identifiable, Hashable, Codable {
     let timestamb: Date
     var user: User?
     
-    var didLike: Bool? = false
+    var didLike: Bool = false
+    var didSave: Bool = false
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.ownerUid = try container.decode(String.self, forKey: .ownerUid)
+        self.caption = try container.decode(String.self, forKey: .caption)
+        self.likes = try container.decode(Int.self, forKey: .likes)
+        self.imageUrl = try container.decode(String.self, forKey: .imageUrl)
+        self.timestamb = try container.decode(Date.self, forKey: .timestamb)
+        
+        self.user = try container.decodeIfPresent(User.self, forKey: .user)
+        self.didLike = try container.decodeIfPresent(Bool.self, forKey: .didLike) ?? false
+        self.didSave = try container.decodeIfPresent(Bool.self, forKey: .didSave) ?? false
+    }
+    
+    init(id: String, ownerUid: String, caption: String, likes: Int, imageUrl: String, timestamb: Date, user: User? = nil, didLike: Bool = false, didSave: Bool = false) {
+        self.id = id
+        self.ownerUid = ownerUid
+        self.caption = caption
+        self.likes = likes
+        self.imageUrl = imageUrl
+        self.timestamb = timestamb
+        self.user = user
+        self.didLike = didLike
+        self.didSave = didSave
+    }
 }
 
 extension Post {
