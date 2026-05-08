@@ -29,8 +29,10 @@ class FeedService: FeedServiceProtocol {
         let postIds = try await fetchPostIDs()
         return try await fetchPosts(with: postIds)
     }
-    
+   
     func refreshPosts() async throws -> [Post] {
+        lastDoc = nil
+        shouldLoadMoreData = true
         return try await fetchFeedPosts()
     }
     

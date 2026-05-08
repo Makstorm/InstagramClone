@@ -44,7 +44,10 @@ extension ProfileViewModel {
     }
     
     func checkIfUserIsFollowed() {
-        guard user.isFollowed == nil else { return }
+        guard user.isFollowed == nil else {
+            print("DEBUG: got here as isFollowed populated with defauld value")
+            return
+        }
         Task {
             self.user.isFollowed = try await UserService.checkIfUserIsFollowed(uid: user.id)
         }

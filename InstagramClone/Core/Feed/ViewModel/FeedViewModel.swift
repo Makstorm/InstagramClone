@@ -64,6 +64,7 @@ class FeedViewModel: ObservableObject {
 
             for try await (index, user) in group {
                 result[index].user = user
+                print("DEBUG: Fetched feed user for post \(user)")
             }
         }
         
