@@ -10,19 +10,15 @@ import Combine
 import Kingfisher
 
 struct FeedCell: View {
-    @ObservedObject var viewModel: FeedCellViewModel
+    @ObservedObject var viewModel: FeedViewModel
     @State private var showComments = false
+    @State private var showPostOptionsMenu = false
     
-    private var post: Post {
-        return viewModel.post
-    }
+    private let post: Post
     
-    private var didLike: Bool {
-        return post.didLike ?? false
-    }
-    
-    init(post: Post) {
-        self.viewModel = FeedCellViewModel(post: post)
+    init(post: Post, viewModel: FeedViewModel) {
+        self.post = post
+        self.viewModel = viewModel
     }
     
     var body: some View {
@@ -30,16 +26,24 @@ struct FeedCell: View {
             //image + username
             HStack {
                 if let user = post.user {
-                    CircularProfileImageView(user: user, size: .xSmall)
-                    
-                    Text(user.username)
-                        .font(.footnote)
-                        .fontWeight(.semibold)
+                    NavigationLink(value: FeedRouter.profile(user)) {
+                        CircularProfileImageView(user: user, size: .xSmall)
+                        
+                        Text(user.username)
+                            .font(.footnote)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.black)
+                    }
                 }
                 
                 Spacer()
+                
+                Button { showPostOptionsMenu.toggle() } label: {
+                    Image(systemName: "ellipsis")
+                }
+                
             }
-            .padding(.leading)
+            .padding(.horizontal)
             
             // post image
             
@@ -49,17 +53,16 @@ struct FeedCell: View {
                     .scaledToFill()
                     .frame(width: proxy.size.width, height: 400)
                     .clipped()
+                    .contentShape(.rect)
             }
             .frame(height: 400)
             
             //action button
             HStack {
-                Button {
-                    handeleLikeTaped()
-                } label: {
-                    Image(systemName: didLike ? "heart.fill" : "heart")
+                Button { handeleLikeTaped() } label: {
+                    Image(systemName: post.didLike ? "heart.fill" : "heart")
                         .imageScale(.large)
-                        .foregroundStyle(didLike ? .red : .black)
+                        .foregroundStyle(post.didLike ? .red : .black)
                 }
                 
                 Button {
@@ -77,9 +80,13 @@ struct FeedCell: View {
                 }
                 
                 Spacer()
-
+                
+                Button { handleSaveTapped() } label: {
+                    Image(systemName: post.didSave ? "bookmark.fill" : "bookmark")
+                        .imageScale(.large)
+                }
             }
-            .padding(.leading, 8)
+            .padding(.horizontal, 8)
             .padding(.top, 4)
             .foregroundStyle(.black)
             
@@ -112,23 +119,57 @@ struct FeedCell: View {
                 .padding(.top, 1)
                 .foregroundStyle(.gray)
         }
-        .sheet(isPresented: $showComments, content: {
+        .task { await viewModel.checkIfUserLikedPost(post) }
+        .task { await viewModel.checkIfUserSavedPost(post) }
+        .sheet(isPresented: $showComments) {
             CommentsView(post: post)
                 .presentationDragIndicator(.visible)
-        })
+        }
+        .confirmationDialog("Post Options", isPresented: $showPostOptionsMenu, titleVisibility: .visible) {
+            Button("Report", role: .destructive) {
+                print("DEBUG: Show report sheet here..")
+            }
+        }
+    }
+}
+
+private extension FeedCell {
+    var postIndex: Int? {
+        return viewModel.posts.firstIndex(where: { $0.id == post.id })
     }
     
-    private func handeleLikeTaped() {
+    func handeleLikeTaped() {
+        guard let postIndex else { return }
         Task {
-            if didLike {
-                try await viewModel.unlike()
+            if viewModel.posts[postIndex].didLike {
+                await viewModel.unlike(post)
             } else {
-                try await viewModel.like()
+                await viewModel.like(post)
+            }
+        }
+    }
+    
+    func handleSaveTapped() {
+        guard let postIndex else { return }
+        
+        Task {
+            if viewModel.posts[postIndex].didSave {
+                await viewModel.unsave(post)
+            } else {
+                await viewModel.save(post)
             }
         }
     }
 }
 
 #Preview {
-    FeedCell(post: MockData.posts[0])
+    FeedCell(
+        post: MockData.posts[0],
+        viewModel: FeedViewModel(
+            feedService: FeedService(),
+            userService: MockUserService(),
+            likeService: MockLikePostService(),
+            savePostService: MockSavePostService()
+        )
+    )
 }

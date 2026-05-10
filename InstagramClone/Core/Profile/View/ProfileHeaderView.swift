@@ -58,6 +58,7 @@ struct ProfileHeaderView: View {
     
         
     init(user: User) {
+        print("DEBUG: Got user in ProfileHeaderView \(user)")
         self.viewModel = ProfileViewModel(user: user)
     }
     

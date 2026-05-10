@@ -16,11 +16,11 @@ struct User: Identifiable, Codable, Hashable {
     var bio: String?
     let email: String
     
-    var isFollowed: Bool? = false
+    var isFollowed: Bool? 
     var stats: UserStats?
     
     var isCurrentUser: Bool {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return false}
+        guard let currentUid = Auth.auth().currentUser?.uid else { return false }
         return currentUid == id
     }
 }
