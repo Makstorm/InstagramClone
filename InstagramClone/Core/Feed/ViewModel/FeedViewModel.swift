@@ -15,10 +15,24 @@ class FeedViewModel: ObservableObject {
     
     private let feedService: FeedServiceProtocol
     private let userService: UserServiceProtocol
+    private let likeService: LikePostServiceProtocol
+    private let savePostService: SavePostServiceProtocol
     
-    init(feedService: FeedServiceProtocol, userService: UserServiceProtocol) {
+    init(
+        feedService: FeedServiceProtocol,
+        userService: UserServiceProtocol,
+        likeService: LikePostServiceProtocol,
+        savePostService: SavePostServiceProtocol
+    ) {
+        print("DEBUG: Feed view model initialized")
         self.feedService = feedService
         self.userService = userService
+        self.likeService = likeService
+        self.savePostService = savePostService
+        
+        Task {
+            await fetchPosts()
+        }
     }
     
     func fetchPosts() async {
@@ -64,7 +78,6 @@ class FeedViewModel: ObservableObject {
 
             for try await (index, user) in group {
                 result[index].user = user
-                print("DEBUG: Fetched feed user for post \(user)")
             }
         }
         
@@ -80,7 +93,7 @@ extension FeedViewModel {
             self.posts[index].didLike = true
             self.posts[index].likes += 1
             
-            try await feedService.like(post)
+            try await likeService.likePost(post)
         } catch {
             posts[index].didLike = false
             posts[index].likes -= 1
@@ -89,12 +102,13 @@ extension FeedViewModel {
     
     func unlike(_ post: Post) async {
         guard let index = posts.firstIndex(where: { $0.id == post.id }) else { return }
+        guard post.likes > 0 else { return }
         
         do {
             self.posts[index].didLike = false
             self.posts[index].likes -= 1
             
-            try await feedService.unlike(post)
+            try await likeService.unlikePost(post)
         } catch {
             posts[index].didLike = true
             posts[index].likes += 1
@@ -105,7 +119,7 @@ extension FeedViewModel {
         guard let index = posts.firstIndex(where: { $0.id == post.id }) else { return }
         
         do {
-            self.posts[index].didLike = try await feedService.checkIfUserLikedPost(post)
+            self.posts[index].didLike = try await likeService.checkIfUserLikedPost(post)
         } catch {
             print("DEBUG: Failed to check post like value with error: \(error.localizedDescription)")
         }
@@ -116,7 +130,7 @@ extension FeedViewModel {
         
         do {
             self.posts[index].didSave = true
-            try await feedService.save(post)
+            try await savePostService.save(post)
         } catch {
             self.posts[index].didSave = false
             print("DEBUB: Failed to save a post with error: \(error.localizedDescription)")
@@ -128,7 +142,7 @@ extension FeedViewModel {
 
         do {
             self.posts[index].didSave = false
-            try await feedService.unsave(post)
+            try await savePostService.unsave(post)
         } catch {
             self.posts[index].didSave = true
             print("DEBUG: Failed to unsave a post with error: \(error.localizedDescription)")
@@ -139,7 +153,7 @@ extension FeedViewModel {
         guard let index = posts.firstIndex(where: { $0.id == post.id }) else { return }
         
         do {
-            self.posts[index].didSave = try await feedService.checkIfUserSavedPost(post)
+            self.posts[index].didSave = try await savePostService.checkIfUserSavedPost(post)
         } catch {
             print("DEBUG: Failed to check post save value with error: \(error.localizedDescription)")
         }

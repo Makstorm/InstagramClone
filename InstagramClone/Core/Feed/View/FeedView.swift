@@ -8,7 +8,12 @@
 import SwiftUI
 
 struct FeedView: View {
-    @StateObject var viewModel = FeedViewModel(feedService: FeedService(), userService: UserService())
+    @StateObject var viewModel = FeedViewModel(
+        feedService: FeedService(),
+        userService: UserService(),
+        likeService: LikePostService(),
+        savePostService: SavePostService()
+    )
     
     @State private var activeScrollId: String?
     @State private var paginating = false
@@ -64,11 +69,6 @@ struct FeedView: View {
                     }
                 }
                 .sharedBackgroundVisibility(.hidden)
-            }
-            .onAppear {
-                Task {
-                     await viewModel.fetchPosts()
-                }
             }
         }
     }

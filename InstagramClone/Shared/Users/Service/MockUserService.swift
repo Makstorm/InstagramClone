@@ -9,7 +9,7 @@ import Foundation
 
 struct MockUserService: UserServiceProtocol {
     func fetchUser(withUid uId: String) async throws -> User {
-        return User(id: NSUUID().uuidString, username: "Maks", email: "maks@gmail.com")
+        return User(id: MockData.users[0].id, username: "Maks", email: "maks@gmail.com")
     }
     
     func fetchCurrentUser() async throws -> User? {

@@ -37,6 +37,7 @@
 				Core/Authentication/Tests/LoginViewModelTests.swift,
 				Core/Authentication/Tests/RegistrationViewModelTests.swift,
 				Core/Comments/Test/CommentsViewModelTests.swift,
+				Core/Feed/Tests/FeedViewModelTests.swift,
 			);
 			target = 0F70402E2FA2500E0019CD50 /* InstagramCloneTests */;
 		};
@@ -48,6 +49,7 @@
 				Core/Authentication/Tests/LoginViewModelTests.swift,
 				Core/Authentication/Tests/RegistrationViewModelTests.swift,
 				Core/Comments/Test/CommentsViewModelTests.swift,
+				Core/Feed/Tests/FeedViewModelTests.swift,
 			);
 			target = 0F749C3D2F8FF27700106DD8 /* InstagramClone */;
 		};

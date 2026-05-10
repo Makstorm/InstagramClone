@@ -12,12 +12,6 @@ import FirebaseAuth
 protocol FeedServiceProtocol {
     func fetchFeedPosts() async throws -> [Post]
     func refreshPosts() async throws -> [Post]
-    func like(_ post: Post) async throws
-    func unlike(_ post: Post) async throws
-    func checkIfUserLikedPost(_ post: Post) async throws -> Bool
-    func save(_ post: Post) async throws
-    func unsave(_ post: Post) async throws
-    func checkIfUserSavedPost(_ post: Post) async throws -> Bool
 }
 
 class FeedService: FeedServiceProtocol {
@@ -34,38 +28,6 @@ class FeedService: FeedServiceProtocol {
         lastDoc = nil
         shouldLoadMoreData = true
         return try await fetchFeedPosts()
-    }
-    
-    func like(_ post: Post) async throws {
-        try await PostService.likePost(post)
-        NotificationManager.shared.uploadLikeNotification(toUid: post.ownerUid, post: post)
-    }
-
-    func unlike(_ post: Post) async throws {
-        try await PostService.unlikePost(post)
-        await NotificationManager.shared.deleteLikeNotification(
-                notificationOwnerUid: post.ownerUid,
-                post: post
-            )
-    }
-    
-    func checkIfUserLikedPost(_ post: Post) async throws -> Bool {
-        return try await PostService.checkIfUserLikedPost(post)
-    }
-    
-    func save(_ post: Post) async throws {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        try await FirebaseConstants.UserSavedPostsCollection(uid: uid).document(post.id).setData([:])
-    }
-    
-    func unsave(_ post: Post) async throws {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        try await FirebaseConstants.UserSavedPostsCollection(uid: uid).document(post.id).delete()
-    }
-    
-    func checkIfUserSavedPost(_ post: Post) async throws -> Bool {
-        guard let uid = Auth.auth().currentUser?.uid else { return false }
-        return try await FirebaseConstants.UserSavedPostsCollection(uid: uid).document(post.id).getDocument().exists
     }
 }
 

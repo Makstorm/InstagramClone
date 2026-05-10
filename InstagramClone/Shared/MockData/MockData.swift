@@ -11,93 +11,83 @@ class MockData {
     static var posts: [Post] = [
         .init(
             id: NSUUID().uuidString,
-            ownerUid: NSUUID().uuidString,
+            ownerUid: users[0].id,
             caption: "this is some test caption for now",
-            likes: 123,
+            likes: 0,
             imageUrl: "batman-2",
             timestamb: Date(),
-            user: users[0]
         ),
         .init(
             id: NSUUID().uuidString,
-            ownerUid: NSUUID().uuidString,
+            ownerUid: users[0].id,
             caption: "this is some test caption for now",
-            likes: 123,
+            likes: 0,
             imageUrl: "batman-2",
             timestamb: Date(),
-            user: users[0]
         ),
         .init(
             id: NSUUID().uuidString,
-            ownerUid: NSUUID().uuidString,
+            ownerUid: users[0].id,
             caption: "this is some test caption for now",
-            likes: 123,
+            likes: 0,
             imageUrl: "batman-2",
             timestamb: Date(),
-            user: users[0]
         ),
         .init(
             id: NSUUID().uuidString,
-            ownerUid: NSUUID().uuidString,
+            ownerUid: users[0].id,
             caption: "this is some test caption for now",
-            likes: 123,
+            likes: 0,
             imageUrl: "batman-2",
             timestamb: Date(),
-            user: users[0]
         ),
         .init(
             id: NSUUID().uuidString,
-            ownerUid: NSUUID().uuidString,
+            ownerUid: users[0].id,
             caption: "this is some test caption for now",
-            likes: 123,
+            likes: 0,
             imageUrl: "batman-2",
             timestamb: Date(),
-            user: users[0]
         ),
         .init(
             id: NSUUID().uuidString,
-            ownerUid: NSUUID().uuidString,
+            ownerUid: users[0].id,
             caption: "this is some test caption for now",
-            likes: 123,
+            likes: 0,
             imageUrl: "batman-2",
             timestamb: Date(),
-            user: users[0]
         ),
         .init(
             id: NSUUID().uuidString,
-            ownerUid: NSUUID().uuidString,
+            ownerUid: users[0].id,
             caption: "this is some test caption for now",
-            likes: 123,
+            likes: 0,
             imageUrl: "batman-2",
             timestamb: Date(),
-            user: users[0]
         ),
         .init(
             id: NSUUID().uuidString,
-            ownerUid: NSUUID().uuidString,
+            ownerUid: users[0].id,
             caption: "this is some test caption for now",
-            likes: 123,
+            likes: 0,
             imageUrl: "batman-2",
             timestamb: Date(),
-            user: users[0]
         ),
         .init(
             id: NSUUID().uuidString,
-            ownerUid: NSUUID().uuidString,
+            ownerUid: users[0].id,
             caption: "this is some test caption for now",
-            likes: 123,
+            likes: 0,
             imageUrl: "batman-2",
             timestamb: Date(),
-            user: users[0]
         ),
         .init(
             id: NSUUID().uuidString,
-            ownerUid: NSUUID().uuidString,
+            ownerUid: users[0].id,
             caption: "this is some test caption for now",
-            likes: 123,
+            likes: 0,
             imageUrl: "batman-2",
             timestamb: Date(),
-            user: users[0]
         ),
     ]
     
