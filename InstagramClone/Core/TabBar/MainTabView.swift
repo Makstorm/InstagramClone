@@ -26,6 +26,7 @@ struct MainTabView: View {
                 CurrentUserProfileView()
             }
         ])
+        .tint(Color(.primaryText))
     }
 }
 

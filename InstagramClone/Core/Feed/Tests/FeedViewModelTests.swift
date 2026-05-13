@@ -26,7 +26,7 @@ final class FeedViewModelTests: XCTestCase {
         viewModel = FeedViewModel(
             feedService: mockFeedService,
             userService: mockUserService,
-            likeService: mockLikeService,
+            likePostService: mockLikeService,
             savePostService: mockPostSaveService
         )
     }

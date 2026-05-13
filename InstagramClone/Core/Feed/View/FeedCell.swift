@@ -9,14 +9,14 @@ import SwiftUI
 import Combine
 import Kingfisher
 
-struct FeedCell: View {
-    @ObservedObject var viewModel: FeedViewModel
+struct FeedCell<ViewModel>: View where ViewModel: FeedViewModelProtocol {
+    @ObservedObject var viewModel: ViewModel
     @State private var showComments = false
     @State private var showPostOptionsMenu = false
     
     private let post: Post
     
-    init(post: Post, viewModel: FeedViewModel) {
+    init(post: Post, viewModel: ViewModel) {
         self.post = post
         self.viewModel = viewModel
     }
@@ -32,7 +32,7 @@ struct FeedCell: View {
                         Text(user.username)
                             .font(.footnote)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color(.primaryText))
                     }
                 }
                 
@@ -40,13 +40,13 @@ struct FeedCell: View {
                 
                 Button { showPostOptionsMenu.toggle() } label: {
                     Image(systemName: "ellipsis")
+                        .foregroundStyle(Color(.primaryText))
                 }
                 
             }
             .padding(.horizontal)
             
             // post image
-            
             GeometryReader { proxy in
                 KFImage(URL(string: post.imageUrl))
                     .resizable()
@@ -62,19 +62,15 @@ struct FeedCell: View {
                 Button { handeleLikeTaped() } label: {
                     Image(systemName: post.didLike ? "heart.fill" : "heart")
                         .imageScale(.large)
-                        .foregroundStyle(post.didLike ? .red : .black)
+                        .foregroundStyle(post.didLike ? .red : Color(.primaryText))
                 }
                 
-                Button {
-                    showComments.toggle()
-                } label: {
+                Button { showComments.toggle() } label: {
                     Image(systemName: "bubble.right")
                         .imageScale(.large)
                 }
                 
-                Button {
-                    print("Share")
-                } label: {
+                Button { print("Share") } label: {
                     Image(systemName: "paperplane")
                         .imageScale(.large)
                 }
@@ -88,7 +84,7 @@ struct FeedCell: View {
             }
             .padding(.horizontal, 8)
             .padding(.top, 4)
-            .foregroundStyle(.black)
+            .foregroundStyle(Color(.primaryText))
             
             // likes label
             
@@ -119,8 +115,8 @@ struct FeedCell: View {
                 .padding(.top, 1)
                 .foregroundStyle(.gray)
         }
-        .task { await viewModel.checkIfUserLikedPost(post) }
-        .task { await viewModel.checkIfUserSavedPost(post) }
+        .task { await viewModel.didLike(post) }
+        .task { await viewModel.didSave(post) }
         .sheet(isPresented: $showComments) {
             CommentsView(post: post)
                 .presentationDragIndicator(.visible)
@@ -168,7 +164,7 @@ private extension FeedCell {
         viewModel: FeedViewModel(
             feedService: FeedService(),
             userService: MockUserService(),
-            likeService: MockLikePostService(),
+            likePostService: MockLikePostService(),
             savePostService: MockSavePostService()
         )
     )

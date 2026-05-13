@@ -16,7 +16,7 @@ protocol LikePostServiceProtocol {
 }
 
 struct LikePostService: LikePostServiceProtocol {
-    private let cache = LikesCache()
+    private let cache = LikesCache.shared
     
     func likePost(_ post: Post) async throws {
         guard let uid = Auth.auth().currentUser?.uid else { return }

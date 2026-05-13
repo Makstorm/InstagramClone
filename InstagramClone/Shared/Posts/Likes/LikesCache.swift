@@ -11,8 +11,9 @@ import FirebaseFirestore
 
 class LikesCache: UserActivityCache {
     private let refreshInterval: TimeInterval = 60 * 60 * 24
+    static let shared = LikesCache()
     
-    init() {
+    private init() {
         super.init(refreshInterval: refreshInterval, cacheIdentifier: "user-likes")
     }
 }

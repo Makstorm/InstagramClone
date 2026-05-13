@@ -41,8 +41,7 @@ private extension FeedService {
         
         if let lastDoc {
             // fetch next batch of posts
-            let next = query.start(afterDocument: lastDoc)
-            snapshot = try await next.getDocuments()
+            snapshot = try await query.start(afterDocument: lastDoc).getDocuments()
             shouldLoadMoreData = snapshot.documents.last != nil
             if let lastId = snapshot.documents.last {
                 self.lastDoc = lastId

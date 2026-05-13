@@ -9,25 +9,24 @@ import Combine
 import Foundation
 
 @MainActor
-class FeedViewModel: ObservableObject {
+class FeedViewModel: FeedViewModelProtocol {
     @Published var posts = [Post]()
     @Published var loadingState: ContentLoadingState = .loading
     
     private let feedService: FeedServiceProtocol
-    private let userService: UserServiceProtocol
-    private let likeService: LikePostServiceProtocol
-    private let savePostService: SavePostServiceProtocol
+    private(set) var userService: UserServiceProtocol
+    private(set) var likePostService: LikePostServiceProtocol
+    private(set) var savePostService: SavePostServiceProtocol
     
     init(
         feedService: FeedServiceProtocol,
         userService: UserServiceProtocol,
-        likeService: LikePostServiceProtocol,
+        likePostService: LikePostServiceProtocol,
         savePostService: SavePostServiceProtocol
     ) {
-        print("DEBUG: Feed view model initialized")
         self.feedService = feedService
         self.userService = userService
-        self.likeService = likeService
+        self.likePostService = likePostService
         self.savePostService = savePostService
         
         Task {
@@ -50,7 +49,6 @@ class FeedViewModel: ObservableObject {
     
     func refreshPosts() async {
         do {
-            self.loadingState = .loading
             self.posts.removeAll()
             self.posts = try await feedService.refreshPosts()
             try await fetchPostUserData()
@@ -85,77 +83,3 @@ class FeedViewModel: ObservableObject {
     }
 }
 
-extension FeedViewModel {
-    func like(_ post: Post) async {
-        guard let index = posts.firstIndex(where: { $0.id == post.id }) else { return }
-        
-        do {
-            self.posts[index].didLike = true
-            self.posts[index].likes += 1
-            
-            try await likeService.likePost(post)
-        } catch {
-            posts[index].didLike = false
-            posts[index].likes -= 1
-        }
-    }
-    
-    func unlike(_ post: Post) async {
-        guard let index = posts.firstIndex(where: { $0.id == post.id }) else { return }
-        guard post.likes > 0 else { return }
-        
-        do {
-            self.posts[index].didLike = false
-            self.posts[index].likes -= 1
-            
-            try await likeService.unlikePost(post)
-        } catch {
-            posts[index].didLike = true
-            posts[index].likes += 1
-        }
-    }
-    
-    func checkIfUserLikedPost(_ post: Post) async {
-        guard let index = posts.firstIndex(where: { $0.id == post.id }) else { return }
-        
-        do {
-            self.posts[index].didLike = try await likeService.checkIfUserLikedPost(post)
-        } catch {
-            print("DEBUG: Failed to check post like value with error: \(error.localizedDescription)")
-        }
-    }
-    
-    func save(_ post: Post) async {
-        guard let index = posts.firstIndex(where: { $0.id == post.id }) else { return }
-        
-        do {
-            self.posts[index].didSave = true
-            try await savePostService.save(post)
-        } catch {
-            self.posts[index].didSave = false
-            print("DEBUB: Failed to save a post with error: \(error.localizedDescription)")
-        }
-    }
-    
-    func unsave(_ post: Post) async {
-        guard let index = posts.firstIndex(where: { $0.id == post.id }) else { return }
-
-        do {
-            self.posts[index].didSave = false
-            try await savePostService.unsave(post)
-        } catch {
-            self.posts[index].didSave = true
-            print("DEBUG: Failed to unsave a post with error: \(error.localizedDescription)")
-        }
-    }
-    
-    func checkIfUserSavedPost(_ post: Post) async {
-        guard let index = posts.firstIndex(where: { $0.id == post.id }) else { return }
-        
-        do {
-            self.posts[index].didSave = try await savePostService.checkIfUserSavedPost(post)
-        } catch {
-            print("DEBUG: Failed to check post save value with error: \(error.localizedDescription)")
-        }
-    }
-}

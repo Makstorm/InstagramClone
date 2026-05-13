@@ -11,7 +11,7 @@ struct FeedView: View {
     @StateObject var viewModel = FeedViewModel(
         feedService: FeedService(),
         userService: UserService(),
-        likeService: LikePostService(),
+        likePostService: LikePostService(),
         savePostService: SavePostService()
     )
     
