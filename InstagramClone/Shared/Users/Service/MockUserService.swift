@@ -9,10 +9,10 @@ import Foundation
 
 struct MockUserService: UserServiceProtocol {
     func fetchUser(withUid uId: String) async throws -> User {
-        return User(id: MockData.users[0].id, username: "Maks", email: "maks@gmail.com")
+        return User(id: MockData.users[0].id, username: "Maks", email: "maks@gmail.com", isPrivate: true)
     }
     
     func fetchCurrentUser() async throws -> User? {
-        return nil
+        return User(id: MockData.users[0].id, username: "Maks", email: "maks@gmail.com", isPrivate: true)
     }
 }

@@ -40,14 +40,10 @@ class UserService: UserServiceProtocol {
         -> [User]
     {
         switch config {
-        case .followers(let uid):
-            return try await fetchFollowers(uid: uid)
-        case .following(let uid):
-            return try await fetchFollowing(uid: uid)
-        case .likes(let postId):
-            return try await fetchPostLikesUser(uid: postId)
-        case .explore:
-            return try await fetchAllUsers()
+        case .followers(let uid): return try await fetchFollowers(uid: uid)
+        case .following(let uid): return try await fetchFollowing(uid: uid)
+        case .likes(let postId): return try await fetchPostLikesUser(uid: postId)
+        case .explore: return try await fetchAllUsers()
         }
     }
 
@@ -118,6 +114,7 @@ extension UserService {
             currentUid
         ).collection("user-following").document(uid).getDocument()
 
+        print("DEBUG: Got triggered checkIfUserIsFollowed via ProfileHeaderView with result: \(snapshot.exists)")
         return snapshot.exists
     }
 }

@@ -40,28 +40,17 @@ enum AuthenticationError: Error {
 extension AuthenticationError: LocalizedError {
     var errorDescription: String? {
         switch self {
-        case .userDisabled:
-            return "This account has been disabled."
-        case .emailAlreadyInUse:
-            return "This email is alredy in use. Please login or try again."
-        case .invalidEmail:
-            return "The email addres is invalid. Please try again later."
-        case .wrongPassword:
-            return "Inkorrect password. Please try again."
-        case .userNotFound:
-            return "There is no account assosiated with this credentials. Please try again."
-        case .networkError:
-            return "A network error ocurred. Please try again laster."
-        case .credentialAlreadyInUse:
-            return "Credentials already in use. Please try again."
-        case .werkPassword:
-            return "Password must be at least 6 characters in length. Please try again."
-        case .unknown:
-            return "An unknown error occurred. Please try again."
-        case .invalidCredentials:
-            return "The credentiald you entered are invalid. Please try again."
-        case .tooManyRequests:
-            return "Access to this accout has been temporarily disabled due to multiple failed login attempts. Please try again later."
+        case .userDisabled: return "This account has been disabled."
+        case .emailAlreadyInUse: return "This email is alredy in use. Please login or try again."
+        case .invalidEmail: return "The email addres is invalid. Please try again later."
+        case .wrongPassword: return "Inkorrect password. Please try again."
+        case .userNotFound: return "There is no account assosiated with this credentials. Please try again."
+        case .networkError: return "A network error ocurred. Please try again laster."
+        case .credentialAlreadyInUse: return "Credentials already in use. Please try again."
+        case .werkPassword: return "Password must be at least 6 characters in length. Please try again."
+        case .unknown: return "An unknown error occurred. Please try again."
+        case .invalidCredentials: return "The credentiald you entered are invalid. Please try again."
+        case .tooManyRequests: return "Access to this accout has been temporarily disabled due to multiple failed login attempts. Please try again later."
         }
     }
 }

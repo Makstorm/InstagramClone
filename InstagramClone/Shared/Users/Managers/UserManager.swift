@@ -26,4 +26,13 @@ class UserManager: ObservableObject {
         }
         
     }
+    
+    func fetchUserStats() async {
+        guard let uid = currentUser?.id, currentUser?.stats == nil else { return }
+        do {
+            self.currentUser?.stats = try await UserService.fetchUserStats(uid: uid)
+        } catch {
+            print("DEBUG: Failed to fetch current user stats with error: \(error.localizedDescription)")
+        }
+    }
 }

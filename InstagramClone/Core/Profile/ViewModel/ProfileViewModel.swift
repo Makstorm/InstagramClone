@@ -16,10 +16,12 @@ class ProfileViewModel: ObservableObject {
         self.user = user
     }
     
-    func fetchUserStats() {
+    func fetchUserStats() async {
         guard user.stats == nil else { return }
-        Task {
+        do {
             self.user.stats = try await UserService.fetchUserStats(uid: user.id)
+        } catch {
+            print("DEBUG: Failed to fetch user stats from ProfileView with error: \(error.localizedDescription)")
         }
     }
 }
@@ -43,13 +45,13 @@ extension ProfileViewModel {
         }
     }
     
-    func checkIfUserIsFollowed() {
-        guard user.isFollowed == nil else {
-            print("DEBUG: got here as isFollowed populated with defauld value")
-            return
-        }
-        Task {
+    func checkIfUserIsFollowed() async {
+        guard user.isFollowed == nil else { return }
+        
+        do {
             self.user.isFollowed = try await UserService.checkIfUserIsFollowed(uid: user.id)
+        } catch {
+            print("DEBUG: Failed to check if user is followed with error: \(error.localizedDescription)")
         }
     }
 }

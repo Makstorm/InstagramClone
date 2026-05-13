@@ -50,6 +50,7 @@ struct PostGridView: View {
                             .scaledToFill()
                             .frame(width: imageDimention, height: imageDimention)
                             .clipped()
+                            .contentShape(.rect)
                             .onAppear { loadMorePosts(post) }
                             .onTapGesture { selectedPost = post }
                     }
@@ -94,7 +95,7 @@ private extension PostGridView {
     
     var emptyStateImageName: String {
         switch configuration {
-        case .profile: return "cameta.circle"
+        case .profile: return "camera.circle"
         case .likedPosts: return "heart.circle"
         case .savedPosts: return "bookmark.circle"
         }

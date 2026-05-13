@@ -92,10 +92,10 @@ class MockData {
     ]
     
     static var users: [User] = [
-        .init(id: NSUUID().uuidString, username: "batman", profileImageUrl: nil, fullname: "Bruce Wayne", bio: "Gotham's Dark Knight", email: "batman@gmail.com"),
-        .init(id: NSUUID().uuidString, username: "venom", profileImageUrl: nil, fullname: "Edie Brock", bio: "Venom", email: "venom@gmail.com"),
-        .init(id: NSUUID().uuidString, username: "batman", profileImageUrl: nil, fullname: "Bruce Wayne", bio: "Gotham's Dark Knight", email: "batman@gmail.com"),
-        .init(id: NSUUID().uuidString, username: "spiderman", profileImageUrl: nil, fullname: "Peter Parker", bio: "Test bio", email: "spiderman@gmail.com"),
+        .init(id: NSUUID().uuidString, username: "batman", profileImageUrl: nil, fullname: "Bruce Wayne", bio: "Gotham's Dark Knight", email: "batman@gmail.com", isPrivate: true),
+        .init(id: NSUUID().uuidString, username: "venom", profileImageUrl: nil, fullname: "Edie Brock", bio: "Venom", email: "venom@gmail.com", isPrivate: false),
+        .init(id: NSUUID().uuidString, username: "batman", profileImageUrl: nil, fullname: "Bruce Wayne", bio: "Gotham's Dark Knight", email: "batman@gmail.com", isPrivate: true),
+        .init(id: NSUUID().uuidString, username: "spiderman", profileImageUrl: nil, fullname: "Peter Parker", bio: "Test bio", email: "spiderman@gmail.com", isPrivate: false),
     ]
     
     static var comments: [Comment] = [

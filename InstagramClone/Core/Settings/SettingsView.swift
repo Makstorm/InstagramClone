@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     
+    @EnvironmentObject private var authManager: AuthManager
     @EnvironmentObject private var userManager: UserManager
     
     @State private var isPrivateAccount = false
@@ -51,7 +52,8 @@ struct SettingsView: View {
                 
                 Section("Account") {
                     Button("Log Out", role: .destructive) {
-                        showLogoutConfirmation.toggle()
+//                        showLogoutConfirmation.toggle()
+                        authManager.signOut()
                     }
                     
                     Button("Delete Account", role: .destructive) {

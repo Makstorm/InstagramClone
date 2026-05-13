@@ -15,7 +15,5 @@ enum RegistrationSteps: Int, CaseIterable {
 }
 
 extension RegistrationSteps: Identifiable, Hashable {
-    var id: Int {
-        return self.rawValue
-    }
+    var id: Int { return self.rawValue }
 }
