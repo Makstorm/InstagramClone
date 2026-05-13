@@ -10,6 +10,14 @@ import SwiftUI
 struct CurrentUserProfileView: View {
     @EnvironmentObject private var authManager: AuthManager
     @EnvironmentObject private var userManager: UserManager
+    
+    @State private var isSettingsPresented = false
+    @StateObject private var gridViewModel = PostGridViewModel(
+        service: ProfilePostGridService(),
+        likePostService: LikePostService(),
+        savePostService: SavePostService(),
+        userService: UserService()
+    )
 
     var body: some View {
         NavigationStack {
@@ -18,16 +26,19 @@ struct CurrentUserProfileView: View {
                     // header
                     ProfileHeaderView(user: currentUser)
                     // posts
-                    PostGridView(user: currentUser)
+                    PostGridView(viewModel: gridViewModel, configuration: .profile)
 
                 }
             }
+            .sheet(isPresented: $isSettingsPresented, content: {
+                SettingsView()
+            })
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        authManager.signOut()
+                        isSettingsPresented.toggle()
                     } label: {
                         Image(systemName: "line.3.horizontal")
                             .foregroundStyle(.black)

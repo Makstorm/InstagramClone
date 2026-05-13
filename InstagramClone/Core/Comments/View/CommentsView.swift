@@ -40,7 +40,6 @@ struct CommentsView: View {
                         description: "Be the first to comment and add yours below!"
                     )
                     .frame(height: 400)
-                    .containerRelativeFrame([.horizontal, .vertical])
                 case .error:
                     Text("An error occurred")
                 case .loading:

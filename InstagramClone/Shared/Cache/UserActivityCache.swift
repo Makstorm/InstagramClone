@@ -17,7 +17,6 @@ class UserActivityCache {
     private let cacheIdentifier: String
     
     init(refreshInterval: TimeInterval, cacheIdentifier: String) {
-        print("DEBUG: Got here, initializing cache: \(cacheIdentifier)")
         self.refreshInterval = refreshInterval
         self.cacheIdentifier = cacheIdentifier
         
@@ -31,8 +30,6 @@ class UserActivityCache {
             lastFetched[uid] = lastFetchedTime
         }
         loadCacheData()
-        
-        print("DEBUG: Got cache:",cache)
     }
     
     func set(_ items: [String]) {

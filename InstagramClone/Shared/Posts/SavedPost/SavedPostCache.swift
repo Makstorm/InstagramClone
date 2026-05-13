@@ -11,8 +11,9 @@ import FirebaseFirestore
 
 class SavedPostCache: UserActivityCache {
     private let refreshInterval: TimeInterval = 60 * 60 * 24
+    static let shared = SavedPostCache()
     
-    init() {
+    private init() {
         super.init(refreshInterval: refreshInterval, cacheIdentifier: "saved-posts")
     }
 }

@@ -19,7 +19,7 @@ struct UserStatView: View {
             Text(title)
                 .font(.footnote)
         }
-        .foregroundStyle(.black)
+        .foregroundStyle(Color(.primaryText))
         .opacity(value == 0 ? 0.5 : 1.0)
         .frame(width: 72)
     }

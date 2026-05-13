@@ -16,7 +16,7 @@ protocol SavePostServiceProtocol {
 }
 
 struct SavePostService: SavePostServiceProtocol {
-    private let cache = SavedPostCache()
+    private let cache = SavedPostCache.shared
     
     func save(_ post: Post) async throws {
         guard let uid = Auth.auth().currentUser?.uid else { return }
