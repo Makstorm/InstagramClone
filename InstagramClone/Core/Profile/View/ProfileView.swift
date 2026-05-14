@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct ProfileView: View {
-    let user: User
     @StateObject private var gridViewModel: PostGridViewModel
-
+    @StateObject private var profileViewModel: ProfileViewModel
+    
     init(user: User) {
-        self.user = user
+        self._profileViewModel = StateObject(
+            wrappedValue: ProfileViewModel(
+                user: user
+            )
+        )
         self._gridViewModel = StateObject(
             wrappedValue: PostGridViewModel(
                 service: ProfilePostGridService(user: user),
@@ -26,14 +30,36 @@ struct ProfileView: View {
     var body: some View {
         ScrollView {
             // header
-            ProfileHeaderView(user: user)
+            ProfileHeaderView(user: profileViewModel.user, actionHandler: handleFollowTapped)
             // posts
 
-            PostGridView(viewModel: gridViewModel, configuration: .profile)
+            if profileViewModel.user.isPrivate {
+                IGContentUnavailableView(
+                    "This account is private.",
+                    systemImage: "lock.circle",
+                    description: "Request to follow this account to see their content."
+                )
+                .frame(height: 400)
+            } else {
+                PostGridView(viewModel: gridViewModel, configuration: .profile)
+            }
 
         }
+        .task { await profileViewModel.fetchUserStats() }
+        .task { await profileViewModel.checkIfUserIsFollowed() }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private extension ProfileView {
+    func handleFollowTapped() {
+        guard let isFollowed = profileViewModel.user.isFollowed else { return }
+        if isFollowed {
+            profileViewModel.unfollow()
+        } else {
+            profileViewModel.follow()
+        }
     }
 }
 

@@ -15,14 +15,10 @@ enum UserListConfig: Hashable {
 
     var navigationTitle: String {
         switch self {
-        case .followers:
-            return "Followers"
-        case .following:
-            return "Following"
-        case .likes:
-            return "Likes"
-        case .explore:
-            return "Explore"
+        case .followers: return "Followers"
+        case .following: return "Following"
+        case .likes: return "Likes"
+        case .explore: return "Explore"
         }
     }
 }

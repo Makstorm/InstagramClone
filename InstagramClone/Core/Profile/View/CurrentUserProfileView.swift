@@ -11,7 +11,8 @@ struct CurrentUserProfileView: View {
     @EnvironmentObject private var authManager: AuthManager
     @EnvironmentObject private var userManager: UserManager
     
-    @State private var isSettingsPresented = false
+    @State private var sheetConfig: SheetConfiguration?
+    
     @StateObject private var gridViewModel = PostGridViewModel(
         service: ProfilePostGridService(),
         likePostService: LikePostService(),
@@ -24,22 +25,32 @@ struct CurrentUserProfileView: View {
             ScrollView {
                 if let currentUser = userManager.currentUser {
                     // header
-                    ProfileHeaderView(user: currentUser)
+                    ProfileHeaderView(user: currentUser) { sheetConfig = .editProfile }
                     // posts
                     PostGridView(viewModel: gridViewModel, configuration: .profile)
 
                 }
             }
-            .sheet(isPresented: $isSettingsPresented, content: {
-                SettingsView()
-            })
+            .refreshable {
+                await userManager.fetchCurrentUser()
+                await userManager.fetchUserStats()
+            }
+            .task { await userManager.fetchUserStats() }
+            .fullScreenCover(item: $sheetConfig) { config in
+                switch config {
+                case .settings:
+                    SettingsView()
+                case .editProfile:
+                    if let user = userManager.currentUser {
+                        EditProfileView(user: user)
+                    }
+                }
+            }
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        isSettingsPresented.toggle()
-                    } label: {
+                    Button { sheetConfig = .settings } label: {
                         Image(systemName: "line.3.horizontal")
                             .foregroundStyle(.black)
                     }
@@ -47,6 +58,15 @@ struct CurrentUserProfileView: View {
                 .sharedBackgroundVisibility(.hidden)
             }
         }
+    }
+}
+
+private extension CurrentUserProfileView {
+    enum SheetConfiguration: Int, Identifiable {
+        case settings
+        case editProfile
+        
+        var id: Int { return self.rawValue }
     }
 }
 

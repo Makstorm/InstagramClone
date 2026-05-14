@@ -15,6 +15,7 @@ struct User: Identifiable, Codable, Hashable {
     var fullname: String?
     var bio: String?
     let email: String
+    var isPrivate: Bool
     
     var isFollowed: Bool? 
     var stats: UserStats?

@@ -13,6 +13,7 @@ import Foundation
 protocol UserServiceProtocol {
     func fetchCurrentUser() async throws -> User?
     func fetchUser(withUid uId: String) async throws -> User
+    func updateUserAccountPrivacy(_ isPrivate: Bool) async throws
 }
 
 class UserService: UserServiceProtocol {
@@ -30,6 +31,12 @@ class UserService: UserServiceProtocol {
             .getDocument()
         return try snapshot.data(as: User.self)
     }
+    
+    func updateUserAccountPrivacy(_ isPrivate: Bool) async throws {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        try await FirebaseConstants.UserCollection.document(currentUid).updateData(["isPrivate": isPrivate])
+    }
 
     static func fetchAllUsers() async throws -> [User] {
         let snapshot = try await FirebaseConstants.UserCollection.getDocuments()
@@ -40,14 +47,10 @@ class UserService: UserServiceProtocol {
         -> [User]
     {
         switch config {
-        case .followers(let uid):
-            return try await fetchFollowers(uid: uid)
-        case .following(let uid):
-            return try await fetchFollowing(uid: uid)
-        case .likes(let postId):
-            return try await fetchPostLikesUser(uid: postId)
-        case .explore:
-            return try await fetchAllUsers()
+        case .followers(let uid): return try await fetchFollowers(uid: uid)
+        case .following(let uid): return try await fetchFollowing(uid: uid)
+        case .likes(let postId): return try await fetchPostLikesUser(uid: postId)
+        case .explore: return try await fetchAllUsers()
         }
     }
 
@@ -118,6 +121,7 @@ extension UserService {
             currentUid
         ).collection("user-following").document(uid).getDocument()
 
+        print("DEBUG: Got triggered checkIfUserIsFollowed via ProfileHeaderView with result: \(snapshot.exists)")
         return snapshot.exists
     }
 }

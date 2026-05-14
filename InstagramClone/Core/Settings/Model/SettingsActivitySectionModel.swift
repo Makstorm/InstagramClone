@@ -13,18 +13,14 @@ enum SettingsActivitySectionModel: Int, CaseIterable {
 }
 
 extension SettingsActivitySectionModel: Identifiable, Hashable {
-    var id: Int {
-        return self.rawValue
-    }
+    var id: Int { return self.rawValue }
 }
 
 extension SettingsActivitySectionModel: CustomStringConvertible {
     var description: String {
         switch self {
-        case .savedPosts:
-            return "Saved posts"
-        case .likePosts:
-            return "Liked posts"
+        case .savedPosts: return "Saved posts"
+        case .likePosts: return "Liked posts"
         }
     }
 }

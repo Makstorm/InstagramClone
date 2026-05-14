@@ -34,7 +34,7 @@ struct CommentsView: View {
             ScrollView {
                 switch viewModel.loadingState {
                 case .empty:
-                    EmptyStateView(
+                    IGContentUnavailableView(
                         "No comments yet",
                         systemImage: "bubble.circle",
                         description: "Be the first to comment and add yours below!"

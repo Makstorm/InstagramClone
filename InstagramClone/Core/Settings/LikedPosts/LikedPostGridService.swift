@@ -12,10 +12,13 @@ import FirebaseFirestore
 class LikedPostGridService: PostGridServiceProtocol {
     private let fetchLimit = 21
     private var shouldLoadMoreData = true
-    private var lastDoc: QueryDocumentSnapshot?
+//    outdated due to cache utilization
+//    private var lastDoc: QueryDocumentSnapshot?
+    private lazy var postIDs = LikesCache.shared.getData()
+    private var indexOfLastFetchedPost = 0
     
     func fetchPosts() async throws -> [Post] {
-        let likedPostIDs = try await fetchPostIDs()
+        let likedPostIDs = fetchPostIDsFromCache()
         
         var result = [Post]()
         
@@ -34,24 +37,37 @@ class LikedPostGridService: PostGridServiceProtocol {
         return result
     }
     
-    private func fetchPostIDs() async throws -> [String] {
-        guard let uid = Auth.auth().currentUser?.uid, shouldLoadMoreData else { return [] }
+    private func fetchPostIDsFromCache() -> [String] {
+        guard shouldLoadMoreData else { return [] }
         
-        let query = FirebaseConstants.UserLikesCollection(uid: uid).limit(to: fetchLimit)
-        let snapshot: QuerySnapshot
+        let startIndex = indexOfLastFetchedPost
+        let endIndex = min(startIndex + fetchLimit, postIDs.count)
         
-        if let lastDoc {
-            // pagination
-            snapshot = try await query.start(afterDocument: lastDoc).getDocuments()
-        } else {
-            // first pull
-            snapshot = try await query.getDocuments()
-            lastDoc = snapshot.documents.last
-        }
+        indexOfLastFetchedPost = endIndex
+        shouldLoadMoreData = endIndex < postIDs.count
         
-        let result = snapshot.documents.map { $0.documentID }
-        shouldLoadMoreData = result.count == fetchLimit
-        
-        return result
+        return Array(postIDs[startIndex ..< endIndex])
     }
+
+    // previous implementation before utilizing cache
+//    private func fetchPostIDs() async throws -> [String] {
+//        guard let uid = Auth.auth().currentUser?.uid, shouldLoadMoreData else { return [] }
+//        
+//        let query = FirebaseConstants.UserLikesCollection(uid: uid).limit(to: fetchLimit)
+//        let snapshot: QuerySnapshot
+//        
+//        if let lastDoc {
+//            // pagination
+//            snapshot = try await query.start(afterDocument: lastDoc).getDocuments()
+//        } else {
+//            // first pull
+//            snapshot = try await query.getDocuments()
+//            lastDoc = snapshot.documents.last
+//        }
+//        
+//        let result = snapshot.documents.map { $0.documentID }
+//        shouldLoadMoreData = result.count == fetchLimit
+//        
+//        return result
+//    }
 }

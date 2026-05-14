@@ -65,7 +65,7 @@ struct AuthService: AuthServiceProtocol {
     }
 
     private func uploadUserData(uid: String, username: String, email: String) async {
-        let user = User(id: uid, username: username, email: email)
+        let user = User(id: uid, username: username, email: email, isPrivate: false)
         guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
         try? await Firestore.firestore().collection("users").document(user.id).setData(encodedUser)
     }

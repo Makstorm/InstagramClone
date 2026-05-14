@@ -26,4 +26,23 @@ class UserManager: ObservableObject {
         }
         
     }
+    
+    func fetchUserStats() async {
+        guard let uid = currentUser?.id, currentUser?.stats == nil else { return }
+        do {
+            self.currentUser?.stats = try await UserService.fetchUserStats(uid: uid)
+        } catch {
+            print("DEBUG: Failed to fetch current user stats with error: \(error.localizedDescription)")
+        }
+    }
+    
+    func updateAccountPrivacy(_ isPrivate: Bool) async {
+        do {
+            self.currentUser?.isPrivate = isPrivate
+            try await service.updateUserAccountPrivacy(isPrivate)
+        } catch {
+            self.currentUser?.isPrivate.toggle()
+            print("DEBUG: Failed to update user privacy with error: \(error.localizedDescription)")
+        }
+    }
 }
