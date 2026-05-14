@@ -24,14 +24,12 @@ struct PostGridView: View {
         self.viewModel = viewModel
         self.configuration = configuration
     }
-    
-    
         
     var body: some View {
         Group {
             switch viewModel.loadingState {
             case .empty:
-                EmptyStateView(
+                IGContentUnavailableView(
                     emptyStateTitle,
                     systemImage: emptyStateImageName,
                     description: emptyStateDescription

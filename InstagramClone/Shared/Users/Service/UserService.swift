@@ -13,6 +13,7 @@ import Foundation
 protocol UserServiceProtocol {
     func fetchCurrentUser() async throws -> User?
     func fetchUser(withUid uId: String) async throws -> User
+    func updateUserAccountPrivacy(_ isPrivate: Bool) async throws
 }
 
 class UserService: UserServiceProtocol {
@@ -29,6 +30,12 @@ class UserService: UserServiceProtocol {
         let snapshot = try await FirebaseConstants.UserCollection.document(uId)
             .getDocument()
         return try snapshot.data(as: User.self)
+    }
+    
+    func updateUserAccountPrivacy(_ isPrivate: Bool) async throws {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        try await FirebaseConstants.UserCollection.document(currentUid).updateData(["isPrivate": isPrivate])
     }
 
     static func fetchAllUsers() async throws -> [User] {

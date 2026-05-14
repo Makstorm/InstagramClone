@@ -10,10 +10,15 @@ import FirebaseFirestore
 class SavedPostGridService: PostGridServiceProtocol {
     private let fetchLimit = 21
     private var shouldLoadMoreData = true
-    private var lastDoc: QueryDocumentSnapshot?
+    
+//  outdated due to chache utilizing
+//  private var lastDoc: QueryDocumentSnapshot?
+    
+    private var indexOfLastFetchedPost = 0
+    private lazy var postIDs = SavedPostCache.shared.getData()
     
     func fetchPosts() async throws -> [Post] {
-        let savedPostIDs = try await fetchPostIDs()
+        let savedPostIDs = fetchPostIDsFromCache()
         
         if savedPostIDs.isEmpty { return [] }
         
@@ -34,24 +39,37 @@ class SavedPostGridService: PostGridServiceProtocol {
         return result.sorted { $0.timestamb > $1.timestamb }
     }
     
-    private func fetchPostIDs() async throws -> [String] {
-        guard let uid = Auth.auth().currentUser?.uid, shouldLoadMoreData else { return [] }
+    private func fetchPostIDsFromCache() -> [String] {
+        guard shouldLoadMoreData else { return [] }
         
-        let query = FirebaseConstants.UserSavedPostsCollection(uid: uid).limit(to: fetchLimit)
-        let snapshot: QuerySnapshot
+        let startIndex = indexOfLastFetchedPost
+        let endIndex = min(startIndex + fetchLimit, postIDs.count)
         
-        if let lastDoc {
-            // pagination
-            snapshot = try await query.start(afterDocument: lastDoc).getDocuments()
-        } else {
-            // first pull
-            snapshot = try await query.getDocuments()
-            lastDoc = snapshot.documents.last
-        }
+        indexOfLastFetchedPost = endIndex
+        shouldLoadMoreData = endIndex < postIDs.count
         
-        let result = snapshot.documents.map { $0.documentID }
-        shouldLoadMoreData = result.count == fetchLimit
-        
-        return result
+        return Array(postIDs[startIndex ..< endIndex])
     }
+    
+    // previos implementation before utilizing cache
+//    private func fetchPostIDs() async throws -> [String] {
+//        guard let uid = Auth.auth().currentUser?.uid, shouldLoadMoreData else { return [] }
+//        
+//        let query = FirebaseConstants.UserSavedPostsCollection(uid: uid).limit(to: fetchLimit)
+//        let snapshot: QuerySnapshot
+//        
+//        if let lastDoc {
+//            // pagination
+//            snapshot = try await query.start(afterDocument: lastDoc).getDocuments()
+//        } else {
+//            // first pull
+//            snapshot = try await query.getDocuments()
+//            lastDoc = snapshot.documents.last
+//        }
+//        
+//        let result = snapshot.documents.map { $0.documentID }
+//        shouldLoadMoreData = result.count == fetchLimit
+//        
+//        return result
+//    }
 }

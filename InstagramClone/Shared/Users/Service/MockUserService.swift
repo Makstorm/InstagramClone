@@ -15,4 +15,8 @@ struct MockUserService: UserServiceProtocol {
     func fetchCurrentUser() async throws -> User? {
         return User(id: MockData.users[0].id, username: "Maks", email: "maks@gmail.com", isPrivate: true)
     }
+    
+    func updateUserAccountPrivacy(_ isPrivate: Bool) async throws {
+        MockData.users[0].isPrivate.toggle()
+    }
 }

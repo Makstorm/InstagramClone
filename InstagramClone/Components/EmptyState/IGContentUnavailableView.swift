@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct EmptyStateView: View {
+struct IGContentUnavailableView: View {
     private let title: String
     private let systemImage: String
     private let description: String?
@@ -41,7 +41,7 @@ struct EmptyStateView: View {
 }
 
 #Preview {
-    EmptyStateView(
+    IGContentUnavailableView(
         "Preview",
         systemImage: "bubble.circle",
         description: "Nothing to see here..."

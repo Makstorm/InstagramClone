@@ -15,6 +15,7 @@ struct SettingsView: View {
     
     @State private var isPrivateAccount = false
     @State private var showLogoutConfirmation = false
+    @State private var showAllert = false
     
     var body: some View {
         NavigationStack {
@@ -35,6 +36,7 @@ struct SettingsView: View {
                 
                 Section("Privacy") {
                     Toggle("Private Accoutn", isOn: $isPrivateAccount)
+                        .tint(.blue)
                     Text("Blocked Accounts")
                 }
                 
@@ -61,6 +63,13 @@ struct SettingsView: View {
                     }
                 }
             }
+            .onAppear(perform: onAppear)
+            .alert("Unsaved Canges", isPresented: $showAllert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Leave Without Saving", role: .destructive) { dismiss() }
+            } message: {
+                Text("Are you sure you want to exit witout saving?")
+            }
             .sheet(isPresented: $showLogoutConfirmation) {
                 Text("Here must be a log out view...")
             }
@@ -76,17 +85,47 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
+                    Button("Cancel", action: onCancel)
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") {
-                        print("DEBUG: Update user info here")
+                        updateUserPrivacyIfNecessary()
                     }
                 }
             }
+        }
+    }
+}
+
+private extension SettingsView {
+    var accountPrivacyDidChange: Bool {
+        guard let currentUser = userManager.currentUser else { return false }
+        
+        return isPrivateAccount != currentUser.isPrivate
+    }
+    
+    func onAppear() {
+        self.isPrivateAccount = userManager.currentUser?.isPrivate ?? false
+    }
+    
+    func onCancel() {
+        if accountPrivacyDidChange {
+            showAllert.toggle()
+        } else {
+            dismiss()
+        }
+    }
+
+    func updateUserPrivacyIfNecessary() {
+        guard accountPrivacyDidChange else {
+            dismiss()
+            return
+        }
+        
+        Task {
+            await userManager.updateAccountPrivacy(isPrivateAccount)
+            dismiss()
         }
     }
 }
