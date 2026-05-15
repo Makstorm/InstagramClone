@@ -36,4 +36,8 @@ struct FirebaseConstants {
     static func UserFeedCollection(uid: String) -> CollectionReference {
         return UserCollection.document(uid).collection("user-feed")
     }
+    
+    static func FollowRequestsCollection(uid: String) -> CollectionReference {
+        return UserCollection.document(uid).collection("follow-requests")
+    }
 }

@@ -19,7 +19,7 @@ class NotificationsViewModel: ObservableObject {
     init(service: NotificationService, userService: UserServiceProtocol) {
         self.service = service
         self.userService = userService
-        Task { await fetchNotifications() }
+        Task {}
         self.currentUser = nil
     }
     

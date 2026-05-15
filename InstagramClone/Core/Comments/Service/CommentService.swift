@@ -44,10 +44,10 @@ struct CommentService: CommentServiceProtocol {
     }
     
     func fetchComments() async throws -> [Comment] {
-        let snapshot = try await FirebaseConstants.PostsCollection.document(postId).collection("post-comments").order(by: "timestamp", descending: true).getDocuments()
-        
-        return snapshot.documents.compactMap {
-            try? $0.data(as: Comment.self)
-        }
+        return try await FirebaseConstants.PostsCollection
+            .document(postId)
+            .collection("post-comments")
+            .order(by: "timestamp", descending: true)
+            .getDocuments(as: Comment.self)
     }
 }

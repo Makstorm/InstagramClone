@@ -67,6 +67,7 @@ struct ProfileHeaderView: View {
                             .stroke(buttonBorderColor, lineWidth: 1)
                     )
             }
+            .disabled(user.userRelationState == .unknown)
 
             Divider()
         }
@@ -78,7 +79,7 @@ struct ProfileHeaderView: View {
 
 private extension ProfileHeaderView {
     private var isFollowed: Bool {
-        return user.isFollowed ?? false
+        return user.userRelationState == .followed
     }
     
     private var stats: UserStats {
@@ -86,34 +87,34 @@ private extension ProfileHeaderView {
     }
     
     private var buttonTitle: String {
-        if user.isCurrentUser {
-            return "Edit profile"
-        } else {
-            return isFollowed ? "Following" : "Follow"
+        switch user.userRelationState {
+        case .unknown: "Loading..."
+        case .isCurrentUser: "Edit Profile"
+        case .notFollowed: "Follow"
+        case .followed: "Following"
+        case .requestedToFollow: "Requested"
+        case .blocked: "Blocked"
         }
     }
     
     private var buttonBackground: Color {
-        if user.isCurrentUser || isFollowed {
-            return .white
-        } else {
-            return Color(.systemBlue)
+        switch user.userRelationState {
+        case .notFollowed: .blue
+        default: .white
         }
     }
     
     private var buttonForegroundColor: Color {
-        if user.isCurrentUser || isFollowed {
-            return .black
-        } else {
-            return .white
+        switch user.userRelationState {
+        case .notFollowed: .white
+        default: .black
         }
     }
     
     private var buttonBorderColor: Color {
-        if user.isCurrentUser || isFollowed {
-            return .gray
-        } else {
-            return .clear
+        switch user.userRelationState {
+        case .notFollowed: .clear
+        default: .gray
         }
     }
 }
