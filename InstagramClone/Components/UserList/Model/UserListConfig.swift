@@ -1,5 +1,5 @@
 //
-//  UserListConfig.swift
+//  UserListConfiguration.swift
 //  InstagramClone
 //
 //  Created by Maxym Horobets on 23.04.2026.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum UserListConfig: Hashable {
+enum UserListConfiguration: Hashable {
     case followers(uid: String)
     case following(uid: String)
     case likes(postId: String)

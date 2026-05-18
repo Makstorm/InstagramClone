@@ -12,8 +12,11 @@ import Combine
 class ProfileViewModel: ObservableObject {
     @Published var user: User
     
-    init(user: User) {
+    private let followService: FollowServiceProtocol
+    
+    init(user: User, followService: FollowServiceProtocol) {
         self.user = user
+        self.followService = followService
     }
     
     func fetchUserStats() async {
@@ -29,29 +32,65 @@ class ProfileViewModel: ObservableObject {
 extension ProfileViewModel {
     func follow() {
         Task {
-            try await UserService.follow(uid: user.id)
-            user.isFollowed = true
-            
-            NotificationManager.shared.uploadFollowNotification(toUid: user.id)
+            let prevState = user.userRelationState
+            do {
+                user.userRelationState = .followed
+                try await followService.follow(uid: user.id)
+                NotificationManager.shared.uploadFollowNotification(toUid: user.id)
+            } catch {
+                user.userRelationState = prevState
+            }
         }
     }
     
     func unfollow() {
         Task {
-            try await UserService.unfollow(uid: user.id)
-            user.isFollowed = false
-                
-            await NotificationManager.shared.deleteFollowNotification(notificationOwnerUid: user.id)
+            let prevState = user.userRelationState
+            do {
+                user.userRelationState = .notFollowed
+                try await followService.unfollow(uid: user.id)
+                await NotificationManager.shared.deleteFollowNotification(notificationOwnerUid: user.id)
+            } catch {
+                user.userRelationState = prevState
+            }
         }
     }
     
-    func checkIfUserIsFollowed() async {
-        guard user.isFollowed == nil else { return }
+    func fetchUserRelationState() async {
+        guard user.userRelationState == .unknown else { return }
         
         do {
-            self.user.isFollowed = try await UserService.checkIfUserIsFollowed(uid: user.id)
+            self.user.userRelationState = try await followService.fetchUserRelatioState(uid: user.id)
         } catch {
             print("DEBUG: Failed to check if user is followed with error: \(error.localizedDescription)")
+        }
+    }
+    
+    func sendFollowRequest() {
+        Task {
+            let prevState = user.userRelationState
+            
+            do {
+                user.userRelationState = .requestedToFollow
+                try await followService.sendFollowRequest(to: user.id)
+            } catch {
+                user.userRelationState = prevState
+                print("DEBUG: Failed to send a follow request with error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func removeFollowRequest() {
+        Task {
+            let prevState = user.userRelationState
+            
+            do {
+                user.userRelationState = .notFollowed
+                try await followService.removeFollowRequest(to: user.id)
+            } catch {
+                user.userRelationState = prevState
+                print("DEBUG: Failed to remove a follow request with error: \(error.localizedDescription)")
+            }
         }
     }
 }

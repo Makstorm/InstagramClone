@@ -89,12 +89,15 @@ struct FeedCell<ViewModel>: View where ViewModel: FeedViewModelProtocol {
             // likes label
             
             if post.likes > 0 {
-                Text("\(post.likes) likes")
-                    .font(.footnote)
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 10)
-                    .padding(.top, 1)
+                NavigationLink(value: FeedRouter.postLikes(postId: post.id)) {
+                    Text("\(post.likes) likes")
+                        .foregroundStyle(Color(.primaryText))
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 10)
+                        .padding(.top, 1)
+                }
             }
             
             // caption label

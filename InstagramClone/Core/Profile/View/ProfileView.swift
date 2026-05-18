@@ -14,7 +14,8 @@ struct ProfileView: View {
     init(user: User) {
         self._profileViewModel = StateObject(
             wrappedValue: ProfileViewModel(
-                user: user
+                user: user,
+                followService: FollowService()
             )
         )
         self._gridViewModel = StateObject(
@@ -46,7 +47,7 @@ struct ProfileView: View {
 
         }
         .task { await profileViewModel.fetchUserStats() }
-        .task { await profileViewModel.checkIfUserIsFollowed() }
+        .task { await profileViewModel.fetchUserRelationState() }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -54,11 +55,17 @@ struct ProfileView: View {
 
 private extension ProfileView {
     func handleFollowTapped() {
-        guard let isFollowed = profileViewModel.user.isFollowed else { return }
-        if isFollowed {
-            profileViewModel.unfollow()
-        } else {
-            profileViewModel.follow()
+        switch profileViewModel.user.userRelationState {
+        case .notFollowed:
+            if profileViewModel.user.isPrivate {
+                profileViewModel.sendFollowRequest()
+            } else {
+                profileViewModel.follow()
+            }
+        case .followed: profileViewModel.unfollow()
+        case .requestedToFollow: profileViewModel.removeFollowRequest()
+        case .blocked: print("DEBUG: Unblock user..")
+        default: break
         }
     }
 }

@@ -13,15 +13,10 @@ class NotificationService {
     func fetchNotifications() async throws -> [Notification] {
         guard let currentUid = Auth.auth().currentUser?.uid else { return [] }
 
-        let snapshot = try await FirebaseConstants.UserNotificationCollection(
-            uid: currentUid
-        )
+        return try await FirebaseConstants
+            .UserNotificationCollection(uid: currentUid)
             .order(by: "timestamp", descending: true)
-            .getDocuments()
-
-        return snapshot.documents.compactMap({
-            try? $0.data(as: Notification.self)
-        })
+            .getDocuments(as: Notification.self)
     }
 
     func uploadNotification(

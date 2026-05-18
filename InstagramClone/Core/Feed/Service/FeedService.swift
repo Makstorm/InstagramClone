@@ -40,18 +40,13 @@ private extension FeedService {
         let snapshot: QuerySnapshot
         
         if let lastDoc {
-            // fetch next batch of posts
             snapshot = try await query.start(afterDocument: lastDoc).getDocuments()
-            shouldLoadMoreData = snapshot.documents.last != nil
-            if let lastId = snapshot.documents.last {
-                self.lastDoc = lastId
-            }
         } else {
-            // first time fetching
             snapshot = try await query.getDocuments()
-            shouldLoadMoreData = snapshot.documents.count == fetchLimit
-            lastDoc = snapshot.documents.last
         }
+        
+        if let lastId = snapshot.documents.last { self.lastDoc = lastId }
+        shouldLoadMoreData = snapshot.documents.count == fetchLimit
         
         return snapshot.documents.map { $0.documentID }
     }

@@ -17,8 +17,6 @@ class AuthManager: ObservableObject {
     init(service: AuthServiceProtocol) {
         self.service = service
         self.userSession = service.getUserSession()
-        //        self.userSession = nil
-//        self.service.signout()
     }
 
     func login(withEmail email: String, password: String) async throws {

@@ -105,4 +105,8 @@ class MockData {
         .init(id: UUID().uuidString, postOwnerUid: posts[0].ownerUid, commnetText: "Test comment for me", postId: posts[0].id, timestamp: Date(), commentOwnerUid: users[0].id),
         .init(id: UUID().uuidString, postOwnerUid: posts[0].ownerUid, commnetText: "Test comment for me", postId: posts[0].id, timestamp: Date(), commentOwnerUid: users[0].id),
     ]
+    
+    static var followRequests: [FollowRequest] = [
+        .init(id: UUID().uuidString, toUserId: users[1].id, fromUserId: users[0].id, timestamp: Date(), user: users.first),
+    ]
 }
