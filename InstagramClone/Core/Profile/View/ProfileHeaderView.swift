@@ -26,10 +26,10 @@ struct ProfileHeaderView: View {
 
                 HStack(spacing: 8) {
                     UserStatView(title: "Post", value: stats.postsCount)
-                    NavigationLink(value: UserListConfig.followers(uid: user.id)) {
+                    NavigationLink(value: UserListConfiguration.followers(uid: user.id)) {
                         UserStatView(title: "Followers", value: stats.followersCount)
                     }
-                    NavigationLink(value: UserListConfig.following(uid: user.id)) {
+                    NavigationLink(value: UserListConfiguration.following(uid: user.id)) {
                         UserStatView(title: "Following", value: stats.followingCount)
                     }
                 }
@@ -71,7 +71,7 @@ struct ProfileHeaderView: View {
 
             Divider()
         }
-        .navigationDestination(for: UserListConfig.self, destination: { config in
+        .navigationDestination(for: UserListConfiguration.self, destination: { config in
             UserListView(config: config)
         })
     }

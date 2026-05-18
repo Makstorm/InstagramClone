@@ -38,50 +38,7 @@ class UserService: UserServiceProtocol {
         try await FirebaseConstants.UserCollection.document(currentUid).updateData(["isPrivate": isPrivate])
     }
 
-    static func fetchAllUsers() async throws -> [User] {
-        return try await FirebaseConstants.UserCollection.getDocuments(as: User.self)
-    }
-
-    static func fetchUsers(forConfig config: UserListConfig) async throws
-        -> [User]
-    {
-        switch config {
-        case .followers(let uid): return try await fetchFollowers(uid: uid)
-        case .following(let uid): return try await fetchFollowing(uid: uid)
-        case .likes(let postId): return try await fetchPostLikesUser(uid: postId)
-        case .explore: return try await fetchAllUsers()
-        }
-    }
-
-    private static func fetchFollowers(uid: String) async throws -> [User] {
-        let snapshot = try await FirebaseConstants.FollowersCollection.document(
-            uid
-        ).collection("user-followers").getDocuments()
-        return try await fetchUsers(snapshot)
-    }
-
-    private static func fetchFollowing(uid: String) async throws -> [User] {
-        let snapshot = try await FirebaseConstants.FollowingCollection.document(
-            uid
-        ).collection("user-following").getDocuments()
-        return try await fetchUsers(snapshot)
-    }
-
-    private static func fetchPostLikesUser(uid: String) async throws -> [User] {
-        return []
-    }
-
-    private static func fetchUsers(_ snapshot: QuerySnapshot) async throws
-        -> [User]
-    {
-//        var users = [User]()
-//        for doc in snapshot.documents {
-//            let uid = doc.documentID
-//            users.append(try await fetchUser(withUid: uid))
-//        }
-//        return users
-        return []
-    }
+    
 }
 
 // MARK: - User Stats
