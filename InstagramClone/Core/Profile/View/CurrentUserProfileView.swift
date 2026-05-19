@@ -17,7 +17,8 @@ struct CurrentUserProfileView: View {
         service: ProfilePostGridService(),
         likePostService: LikePostService(),
         savePostService: SavePostService(),
-        userService: UserService()
+        userService: UserService(),
+        notificationManager: NotificationManager(service: NotificationManagerService())
     )
 
     var body: some View {

@@ -55,7 +55,8 @@ struct PostGridFeedView: View {
             service: SavedPostGridService(),
             likePostService: LikePostService(),
             savePostService: SavePostService(),
-            userService: UserService()
+            userService: UserService(),
+            notificationManager: NotificationManager(service: NotificationManagerService())
         )
     )
 }

@@ -1,31 +1,22 @@
 //
-//  NotificationsService.swift
+//  NotificationMangerService.swift
 //  InstagramClone
 //
-//  Created by Maxym Horobets on 24.04.2026.
+//  Created by Maxym Horobets on 19.05.2026.
 //
 
+import Foundation
 import FirebaseAuth
 import FirebaseFirestore
-import Foundation
 
-class NotificationService {
-    func fetchNotifications() async throws -> [Notification] {
-        guard let currentUid = Auth.auth().currentUser?.uid else { return [] }
+protocol NotificationManagerServiceProtocol {
+    func uploadNotification(toUid uid: String, type: NotificationType, post: Post?) async throws
+    func deleteNotification(toUid uid: String, type: NotificationType, post: Post?) async throws
+}
 
-        return try await FirebaseConstants
-            .UserNotificationCollection(uid: currentUid)
-            .order(by: "timestamp", descending: true)
-            .getDocuments(as: Notification.self)
-    }
-
-    func uploadNotification(
-        toUid uid: String,
-        type: NotificationType,
-        post: Post? = nil
-    ) {
-        guard let currentUid = Auth.auth().currentUser?.uid, uid != currentUid
-        else { return }
+struct NotificationManagerService: NotificationManagerServiceProtocol {
+    func uploadNotification(toUid uid: String, type: NotificationType, post: Post? = nil) async throws {
+        guard let currentUid = Auth.auth().currentUser?.uid, uid != currentUid else { return }
 
         let ref = FirebaseConstants.UserNotificationCollection(uid: uid)
             .document()
@@ -37,18 +28,12 @@ class NotificationService {
             type: type
         )
 
-        guard
-            let notificationData = try? Firestore.Encoder().encode(notification)
-        else { return }
+        guard let notificationData = try? Firestore.Encoder().encode(notification) else { return }
 
-        ref.setData(notificationData)
+        try await ref.setData(notificationData)
     }
 
-    func deleteNotification(
-        toUid uid: String,
-        type: NotificationType,
-        post: Post? = nil
-    ) async throws {
+    func deleteNotification(toUid uid: String, type: NotificationType, post: Post? = nil) async throws {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
 
         let snapshot = try await FirebaseConstants

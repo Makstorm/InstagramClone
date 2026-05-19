@@ -18,6 +18,7 @@ struct CommentsView: View {
                 post: post,
                 commentService: CommentService(postId: post.id),
                 userService: UserService(),
+                notificationManager: NotificationManager(service: NotificationManagerService())
             )
         )
     }

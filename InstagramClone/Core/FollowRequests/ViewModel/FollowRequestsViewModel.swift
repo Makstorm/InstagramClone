@@ -15,10 +15,12 @@ class FollowRequestsViewModel: ObservableObject {
     
     private let followRequestService: FollowRequestServiceProtocol
     private let userService: UserServiceProtocol
+    private let notificationManager: NotificationManager
     
-    init(followRequestService: FollowRequestServiceProtocol, userService: UserServiceProtocol) {
+    init(followRequestService: FollowRequestServiceProtocol, userService: UserServiceProtocol, notificationManager: NotificationManager) {
         self.followRequestService = followRequestService
         self.userService = userService
+        self.notificationManager = notificationManager
     }
     
     func fetchRequests() async {
@@ -35,6 +37,7 @@ class FollowRequestsViewModel: ObservableObject {
         guard let index = removeRequestOptimistically(request) else { return }
         do {
             try await followRequestService.accept(request)
+            try await notificationManager.uploadFollowAcceptedNotification(toUid: request.fromUserId)
         } catch {
             requests.insert(request, at: index)
             print("DEBUG: Failed to accept request with error: \(error.localizedDescription)")
