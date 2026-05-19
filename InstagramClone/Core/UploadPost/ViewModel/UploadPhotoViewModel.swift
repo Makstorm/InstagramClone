@@ -14,12 +14,20 @@ import FirebaseFirestore
 
 @MainActor
 class UploadPhotoViewModel: ObservableObject {
-    
     @Published var selectedImage: PhotosPickerItem? {
-        didSet { Task { await loadImage(fromItem: selectedImage) } }
+        didSet {
+            Task { await loadImage(fromItem: selectedImage) }
+        }
     }
+    @Published var postImage: Image?
+    @Published var loadingState: ContentLoadingState?
+
+    private let service: UploadPostServiceProtocol
     
-    @Published var profileImage: Image?
+    init(service: UploadPostServiceProtocol) {
+        self.service = service
+    }
+
     
     private var uiImage: UIImage?
     
@@ -29,26 +37,21 @@ class UploadPhotoViewModel: ObservableObject {
         guard let uiImage = UIImage(data: data) else { return }
         
         self.uiImage = uiImage
-        self.profileImage = Image(uiImage: uiImage)
+        self.postImage = Image(uiImage: uiImage)
     }
     
-    func uploadPost(caption: String) async throws {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        guard let uiImage = uiImage else { return }
+    func uploadPost(caption: String) async {
+        guard let uiImage else { return }
         
-        let postRef = FirebaseConstants.PostsCollection.document()
-        guard let imageUrl = try await ImageUploader.uploadImage(image: uiImage) else { return }
+        loadingState = .loading
         
-        let post = Post(
-            id: postRef.documentID,
-            ownerUid: uid,
-            caption: caption,
-            likes: 0,
-            imageUrl: imageUrl,
-            timestamb: Date()
-        )
-        
-        let encodedPost = try Firestore.Encoder().encode(post)
-        try await postRef.setData(encodedPost)
+        do {
+            try await service.uploadPost(caption: caption, image: uiImage)
+            loadingState = .complete
+        } catch {
+            loadingState = .error
+            print("DEBUG: Failed to upload post with error: \(error.localizedDescription)")
+        }
     }
+    
 }
