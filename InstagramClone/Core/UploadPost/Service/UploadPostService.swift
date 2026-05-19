@@ -27,7 +27,7 @@ struct UploadPostService: UploadPostServiceProtocol {
             caption: caption,
             likes: 0,
             imageUrl: imageUrl,
-            timestamb: Date()
+            timestamp: Date()
         )
         
         let encodedPost = try Firestore.Encoder().encode(post)

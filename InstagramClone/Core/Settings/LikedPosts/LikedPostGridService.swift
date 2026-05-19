@@ -37,6 +37,12 @@ class LikedPostGridService: PostGridServiceProtocol {
         return result
     }
     
+    func refreshPosts() async throws -> [Post] {
+        indexOfLastFetchedPost = 0
+        shouldLoadMoreData = true
+        return try await fetchPosts()
+    }
+    
     private func fetchPostIDsFromCache() -> [String] {
         guard shouldLoadMoreData else { return [] }
         

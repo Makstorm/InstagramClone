@@ -42,7 +42,25 @@ class PostGridViewModel: FeedViewModelProtocol {
             try await fetchPostUserData()
             loadingState = posts.isEmpty ? .empty : .complete
         } catch {
+            loadingState = .error
             print("DEBAG: Failed to fetch posts with error: \(error.localizedDescription)")
+        }
+    }
+    
+    func refreshPosts() async {
+        do {
+            self.posts = try await service.refreshPosts()
+            
+            if self.posts.isEmpty {
+                loadingState = .empty
+            }
+            
+            if loadingState == .empty && !posts.isEmpty {
+                loadingState = .complete
+            }
+
+        } catch {
+            print("DEBUG: Failed to refresh posts with error: \(error.localizedDescription)")
         }
     }
     

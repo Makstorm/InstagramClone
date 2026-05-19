@@ -20,6 +20,7 @@ struct SavedPostsView: View {
         ScrollView {
             PostGridView(viewModel: gridViewModel, configuration: .savedPosts)
         }
+        .refreshable { await gridViewModel.refreshPosts() }
         .navigationTitle("Saved Posts")
     }
 }
