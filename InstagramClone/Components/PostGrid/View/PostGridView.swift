@@ -114,7 +114,8 @@ private extension PostGridView {
             service: SavedPostGridService(),
             likePostService: LikePostService(),
             savePostService: SavePostService(),
-            userService: UserService()
+            userService: UserService(),
+            notificationManager: NotificationManager(service: NotificationManagerService())
         ),
         configuration: .profile
     )

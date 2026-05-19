@@ -13,10 +13,12 @@ class ProfileViewModel: ObservableObject {
     @Published var user: User
     
     private let followService: FollowServiceProtocol
+    private let notificationManager: NotificationManager
     
-    init(user: User, followService: FollowServiceProtocol) {
+    init(user: User, followService: FollowServiceProtocol, notificationManager: NotificationManager) {
         self.user = user
         self.followService = followService
+        self.notificationManager = notificationManager
     }
     
     func fetchUserStats() async {
@@ -36,7 +38,7 @@ extension ProfileViewModel {
             do {
                 user.userRelationState = .followed
                 try await followService.follow(uid: user.id)
-                NotificationManager.shared.uploadFollowNotification(toUid: user.id)
+                try await notificationManager.uploadFollowNotification(toUid: user.id)
             } catch {
                 user.userRelationState = prevState
             }
@@ -49,7 +51,7 @@ extension ProfileViewModel {
             do {
                 user.userRelationState = .notFollowed
                 try await followService.unfollow(uid: user.id)
-                await NotificationManager.shared.deleteFollowNotification(notificationOwnerUid: user.id)
+                await notificationManager.deleteFollowNotification(notificationOwnerUid: user.id)
             } catch {
                 user.userRelationState = prevState
             }

@@ -20,7 +20,7 @@ struct MainTabView: View {
                 UploadPostView()
             },
             TabItem(icon: "heart") {
-                NotificationView()
+                NotificationsView()
             },
             TabItem(icon: "person") {
                 CurrentUserProfileView()

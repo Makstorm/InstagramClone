@@ -15,13 +15,18 @@ class CommentsViewModel: ObservableObject {
     private let post: Post
     private let userService: UserServiceProtocol
     private let commentService: CommentServiceProtocol
+    private let notificationManager: NotificationManager
     
-    init(post: Post, commentService: CommentServiceProtocol ,userService: UserServiceProtocol) {
+    init(
+        post: Post,
+        commentService: CommentServiceProtocol ,
+        userService: UserServiceProtocol,
+        notificationManager: NotificationManager
+    ) {
         self.post = post
         self.commentService = commentService
         self.userService = userService
-        
-        
+        self.notificationManager = notificationManager
     }
 
     func uploadComment(commentText: String, currentUser: User) async {
@@ -35,7 +40,7 @@ class CommentsViewModel: ObservableObject {
             }
             
             Task {
-                NotificationManager.shared.uploadCommentNotification(toUid: post.ownerUid, post: post)
+                try await notificationManager.uploadCommentNotification(toUid: post.ownerUid, post: post)
             }
         } catch {
             loadingState = .error

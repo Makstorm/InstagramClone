@@ -17,17 +17,20 @@ class FeedViewModel: FeedViewModelProtocol {
     private(set) var userService: UserServiceProtocol
     private(set) var likePostService: LikePostServiceProtocol
     private(set) var savePostService: SavePostServiceProtocol
+    private(set) var notificationManager: NotificationManager
     
     init(
         feedService: FeedServiceProtocol,
         userService: UserServiceProtocol,
         likePostService: LikePostServiceProtocol,
-        savePostService: SavePostServiceProtocol
+        savePostService: SavePostServiceProtocol,
+        notificationManager: NotificationManager
     ) {
         self.feedService = feedService
         self.userService = userService
         self.likePostService = likePostService
         self.savePostService = savePostService
+        self.notificationManager = notificationManager
         
         Task {
             await fetchPosts()

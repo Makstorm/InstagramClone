@@ -12,7 +12,8 @@ struct FeedView: View {
         feedService: FeedService(),
         userService: UserService(),
         likePostService: LikePostService(),
-        savePostService: SavePostService()
+        savePostService: SavePostService(),
+        notificationManager: NotificationManager(service: NotificationManagerService())
     )
     
     @State private var activeScrollId: String?

@@ -47,15 +47,13 @@ struct FeedCell<ViewModel>: View where ViewModel: FeedViewModelProtocol {
             .padding(.horizontal)
             
             // post image
-            GeometryReader { proxy in
-                KFImage(URL(string: post.imageUrl))
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: proxy.size.width, height: 400)
-                    .clipped()
-                    .contentShape(.rect)
-            }
-            .frame(height: 400)
+            KFImage(URL(string: post.imageUrl))
+                .resizable()
+                .scaledToFill()
+                .frame(height: 400)
+                .containerRelativeFrame(.horizontal)
+                .clipped()
+                .contentShape(.rect)
             
             //action button
             HStack {
@@ -168,7 +166,8 @@ private extension FeedCell {
             feedService: FeedService(),
             userService: MockUserService(),
             likePostService: MockLikePostService(),
-            savePostService: MockSavePostService()
+            savePostService: MockSavePostService(),
+            notificationManager: NotificationManager(service: NotificationManagerService())
         )
     )
 }

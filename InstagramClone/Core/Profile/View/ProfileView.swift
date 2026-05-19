@@ -15,7 +15,8 @@ struct ProfileView: View {
         self._profileViewModel = StateObject(
             wrappedValue: ProfileViewModel(
                 user: user,
-                followService: FollowService()
+                followService: FollowService(),
+                notificationManager: NotificationManager(service: NotificationManagerService())
             )
         )
         self._gridViewModel = StateObject(
@@ -23,7 +24,8 @@ struct ProfileView: View {
                 service: ProfilePostGridService(user: user),
                 likePostService: LikePostService(),
                 savePostService: SavePostService(),
-                userService: UserService()
+                userService: UserService(),
+                notificationManager: NotificationManager(service: NotificationManagerService())
             )
         )
     }
