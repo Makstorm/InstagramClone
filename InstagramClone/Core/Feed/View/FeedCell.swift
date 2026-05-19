@@ -109,7 +109,7 @@ struct FeedCell<ViewModel>: View where ViewModel: FeedViewModelProtocol {
             .padding(.top, 1)
             
             
-            Text(post.timestamb.timestampString())
+            Text(post.timestamp.timestampString())
                 .font(.footnote)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 10)

@@ -50,6 +50,7 @@ struct ProfileView: View {
         }
         .task { await profileViewModel.fetchUserStats() }
         .task { await profileViewModel.fetchUserRelationState() }
+        .refreshable { await refresh() }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -68,6 +69,14 @@ private extension ProfileView {
         case .requestedToFollow: profileViewModel.removeFollowRequest()
         case .blocked: print("DEBUG: Unblock user..")
         default: break
+        }
+    }
+    
+    func refresh() async {
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask { await profileViewModel.fetchUserStats() }
+            group.addTask { await profileViewModel.fetchUserRelationState() }
+            group.addTask { await gridViewModel.refreshPosts() }
         }
     }
 }

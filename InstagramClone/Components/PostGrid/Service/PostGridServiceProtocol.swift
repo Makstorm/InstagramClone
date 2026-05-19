@@ -9,4 +9,5 @@ import Foundation
 
 protocol PostGridServiceProtocol {
     func fetchPosts() async throws -> [Post]
+    func refreshPosts() async throws -> [Post]
 }

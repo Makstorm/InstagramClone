@@ -32,10 +32,7 @@ struct CurrentUserProfileView: View {
 
                 }
             }
-            .refreshable {
-                await userManager.fetchCurrentUser()
-                await userManager.fetchUserStats()
-            }
+            .refreshable { await refresh() }
             .task { await userManager.fetchUserStats() }
             .fullScreenCover(item: $sheetConfig) { config in
                 switch config {
@@ -68,6 +65,19 @@ private extension CurrentUserProfileView {
         case editProfile
         
         var id: Int { return self.rawValue }
+    }
+    
+    func refresh() async {
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                await userManager.fetchCurrentUser()
+                await userManager.fetchUserStats()
+            }
+            
+            group.addTask {
+                await gridViewModel.refreshPosts()
+            }
+        }
     }
 }
 

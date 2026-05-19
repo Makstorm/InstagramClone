@@ -36,7 +36,13 @@ class SavedPostGridService: PostGridServiceProtocol {
             }
         }
         
-        return result.sorted { $0.timestamb > $1.timestamb }
+        return result.sorted { $0.timestamp > $1.timestamp }
+    }
+    
+    func refreshPosts() async throws -> [Post] {
+        indexOfLastFetchedPost = 0
+        shouldLoadMoreData = true
+        return try await fetchPosts()
     }
     
     private func fetchPostIDsFromCache() -> [String] {

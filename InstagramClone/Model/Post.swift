@@ -13,7 +13,7 @@ struct Post: Identifiable, Hashable, Codable {
     let caption: String
     var likes: Int
     let imageUrl: String
-    let timestamb: Date
+    let timestamp: Date
     var user: User?
     
     var didLike: Bool = false
@@ -26,20 +26,20 @@ struct Post: Identifiable, Hashable, Codable {
         self.caption = try container.decode(String.self, forKey: .caption)
         self.likes = try container.decode(Int.self, forKey: .likes)
         self.imageUrl = try container.decode(String.self, forKey: .imageUrl)
-        self.timestamb = try container.decode(Date.self, forKey: .timestamb)
+        self.timestamp = try container.decode(Date.self, forKey: .timestamp)
         
         self.user = try container.decodeIfPresent(User.self, forKey: .user)
         self.didLike = try container.decodeIfPresent(Bool.self, forKey: .didLike) ?? false
         self.didSave = try container.decodeIfPresent(Bool.self, forKey: .didSave) ?? false
     }
     
-    init(id: String, ownerUid: String, caption: String, likes: Int, imageUrl: String, timestamb: Date, user: User? = nil, didLike: Bool = false, didSave: Bool = false) {
+    init(id: String, ownerUid: String, caption: String, likes: Int, imageUrl: String, timestamp: Date, user: User? = nil, didLike: Bool = false, didSave: Bool = false) {
         self.id = id
         self.ownerUid = ownerUid
         self.caption = caption
         self.likes = likes
         self.imageUrl = imageUrl
-        self.timestamb = timestamb
+        self.timestamp = timestamp
         self.user = user
         self.didLike = didLike
         self.didSave = didSave

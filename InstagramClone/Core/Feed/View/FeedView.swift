@@ -21,7 +21,7 @@ struct FeedView: View {
     
     var body: some View {
         NavigationStack {
-            Group {
+            ScrollView {
                 switch viewModel.loadingState {
                 case .empty:
                     Text("Empty state goes here")
@@ -29,23 +29,22 @@ struct FeedView: View {
                     Text("An error occurred.")
                 case .loading:
                     ProgressView()
+                        .containerRelativeFrame(.vertical)
                 case .complete:
-                    ScrollView {
-                        LazyVStack(spacing: 32) {
-                            ForEach(viewModel.posts) { post in
-                                FeedCell(post: post, viewModel: viewModel)
-                            }
-                            
-                            if paginating {
-                                ProgressView()
-                            }
+                    LazyVStack(spacing: 32) {
+                        ForEach(viewModel.posts) { post in
+                            FeedCell(post: post, viewModel: viewModel)
                         }
-                        .scrollTargetLayout()
-                        .padding(.top, 8)
+                        
+                        if paginating {
+                            ProgressView()
+                        }
                     }
-                    .scrollPosition(id: $activeScrollId, anchor: .bottom)
+                    .scrollTargetLayout()
+                    .padding(.top, 8)
                 }
             }
+            .scrollPosition(id: $activeScrollId, anchor: .bottom)
             .onChange(of: activeScrollId, { oldValue, newValue in
                 loadMorePosts(newValue)
             })

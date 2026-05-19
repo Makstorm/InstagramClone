@@ -15,7 +15,7 @@ class MockData {
             caption: "this is some test caption for now",
             likes: 0,
             imageUrl: "batman-2",
-            timestamb: Date(),
+            timestamp: Date(),
         ),
         .init(
             id: NSUUID().uuidString,
@@ -23,7 +23,7 @@ class MockData {
             caption: "this is some test caption for now",
             likes: 0,
             imageUrl: "batman-2",
-            timestamb: Date(),
+            timestamp: Date(),
         ),
         .init(
             id: NSUUID().uuidString,
@@ -31,7 +31,7 @@ class MockData {
             caption: "this is some test caption for now",
             likes: 0,
             imageUrl: "batman-2",
-            timestamb: Date(),
+            timestamp: Date(),
         ),
         .init(
             id: NSUUID().uuidString,
@@ -39,7 +39,7 @@ class MockData {
             caption: "this is some test caption for now",
             likes: 0,
             imageUrl: "batman-2",
-            timestamb: Date(),
+            timestamp: Date(),
         ),
         .init(
             id: NSUUID().uuidString,
@@ -47,7 +47,7 @@ class MockData {
             caption: "this is some test caption for now",
             likes: 0,
             imageUrl: "batman-2",
-            timestamb: Date(),
+            timestamp: Date(),
         ),
         .init(
             id: NSUUID().uuidString,
@@ -55,7 +55,7 @@ class MockData {
             caption: "this is some test caption for now",
             likes: 0,
             imageUrl: "batman-2",
-            timestamb: Date(),
+            timestamp: Date(),
         ),
         .init(
             id: NSUUID().uuidString,
@@ -63,7 +63,7 @@ class MockData {
             caption: "this is some test caption for now",
             likes: 0,
             imageUrl: "batman-2",
-            timestamb: Date(),
+            timestamp: Date(),
         ),
         .init(
             id: NSUUID().uuidString,
@@ -71,7 +71,7 @@ class MockData {
             caption: "this is some test caption for now",
             likes: 0,
             imageUrl: "batman-2",
-            timestamb: Date(),
+            timestamp: Date(),
         ),
         .init(
             id: NSUUID().uuidString,
@@ -79,7 +79,7 @@ class MockData {
             caption: "this is some test caption for now",
             likes: 0,
             imageUrl: "batman-2",
-            timestamb: Date(),
+            timestamp: Date(),
         ),
         .init(
             id: NSUUID().uuidString,
@@ -87,7 +87,7 @@ class MockData {
             caption: "this is some test caption for now",
             likes: 0,
             imageUrl: "batman-2",
-            timestamb: Date(),
+            timestamp: Date(),
         ),
     ]
     

@@ -35,7 +35,7 @@ private extension FeedService {
     func fetchPostIDs() async throws -> [String] {
         guard let uid = Auth.auth().currentUser?.uid, shouldLoadMoreData else { return [] }
         
-        let query = FirebaseConstants.UserFeedCollection(uid: uid).limit(to: fetchLimit)
+        let query = FirebaseConstants.UserFeedCollection(uid: uid).order(by: "timestamp", descending: true).limit(to: fetchLimit)
        
         let snapshot: QuerySnapshot
         
@@ -65,7 +65,7 @@ private extension FeedService {
         }
         
         return result.sorted(by: {
-            $0.timestamb > $1.timestamb
+            $0.timestamp > $1.timestamp
         })
     }
 }

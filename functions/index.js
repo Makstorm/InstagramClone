@@ -1,3 +1,5 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable semi */
 /* eslint-disable indent */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
@@ -27,8 +29,18 @@ exports.updateUserFeedAfterFollow = onDocumentCreated(
 
             snapshot.forEach((doc) => {
                 const postId = doc.id;
+
+                const postData = doc.data();
+                const timestamp = postData.timestamp;
+                const ownerUid = postData.ownerUid;
+
+                const data = {
+                    ownerUid,
+                    timestamp,
+                }
+
                 const userFeedRef = db.collection("users").doc(currentUid).collection("user-feed").doc(postId);
-                batch.set(userFeedRef, {});
+                batch.set(userFeedRef, data);
             });
 
             await batch.commit();
@@ -68,6 +80,7 @@ exports.updateUserFeedAfterPost = onDocumentCreated(
         const postId = event.params.postId;
         const snapshot = event.data;
         const data = snapshot.data();
+        const timestamp = data.timestamp;
         const ownerUid = data.ownerUid;
 
         const db = getFirestore();
@@ -75,13 +88,19 @@ exports.updateUserFeedAfterPost = onDocumentCreated(
         try {
             const followersSnapshot = await db.collection("followers").doc(ownerUid).collection("user-followers").get();
             const batch = db.batch();
+
+            const data = {
+                ownerUid,
+                timestamp,
+            };
+            
             followersSnapshot.forEach((doc) => {
                 const userFeedRef = db.collection("users").doc(doc.id).collection("user-feed").doc(postId);
-                batch.set(userFeedRef, {});
+                batch.set(userFeedRef, data);
             });
 
             const ownerFeedRef = db.collection("users").doc(ownerUid).collection("user-feed").doc(postId);
-            batch.set(ownerFeedRef, {});
+            batch.set(ownerFeedRef, data);
             await batch.commit();
         } catch (err) {
             logger.error("Error updating user feed after post:", err);

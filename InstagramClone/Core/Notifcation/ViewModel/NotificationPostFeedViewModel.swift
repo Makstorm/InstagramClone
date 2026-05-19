@@ -33,7 +33,6 @@ class NotificationPostFeedViewModel: FeedViewModelProtocol {
         
         do {
             try await fetchPostUserData()
-            print("DEBUG: Post user is \(posts.first?.user?.username)")
         } catch {
             print("DEBUG: Failed to fetch post user data with error \(error.localizedDescription)")
         }
